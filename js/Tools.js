@@ -1,0 +1,9 @@
+export const TOOL_ERASER = 'eraser';
+export const TOOL_BRUSH = 'brush';
+export const TOOL_BUCKET = 'bucket';
+export const TOOL_PEN = 'pen';
+export const TOOL_RECT = 'rectangle';
+export const TOOL_LINE =  'line';
+export const TOOL_CIRCLE = 'circle';
+export const TOOL_TRI = 'triangle';
+export const TOOL_POLYGON = 'polygon';
