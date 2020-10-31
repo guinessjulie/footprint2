@@ -8,11 +8,19 @@ import {TOOL_ERASER,
     TOOL_TRI,
     TOOL_POLYGON} from './Tools.js'
 
+import Point from './Point.js'    
 import Paint from './Paint.js'
+import Parcel, {parcelMenuClickHandle}  from './Parcel.js';
+import Polygon from './Polygon.js';
 
-let paint = new Paint("canvas")
+
+export const paint = new Paint("canvas")
 paint.init();
 paint.activeTool = TOOL_PEN;
+
+
+let canvas = document.getElementById('canvas')
+let parcel ;
 document.querySelectorAll('[data-command]').forEach(
     el =>{
         el.addEventListener('click', e=>{
@@ -20,6 +28,7 @@ document.querySelectorAll('[data-command]').forEach(
         })
     }
 );
+
 document.querySelectorAll('[data-tool]').forEach(
     el=>{
         el.addEventListener('click', e=>{
@@ -87,4 +96,18 @@ document.querySelectorAll('[data-color]').forEach(
             console.log('color', color );
         } )
     }
-)
+);
+
+document.querySelector('.parcel').addEventListener('click', parcelMenuClickHandle);
+
+// document.querySelectorAll('[data-menu]').forEach(
+//     el=>{
+//         el.addEventListener('click', e=>{
+//             //document.querySelector('[data-menu].active]').classList.toggle('active');
+//             el.classList.toggle("active");
+//             //todo get from Polylgon
+//             //todo global work at canvas
+
+//         })        
+//     }
+// );

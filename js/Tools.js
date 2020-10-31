@@ -7,3 +7,4 @@ export const TOOL_LINE =  'line';
 export const TOOL_CIRCLE = 'circle';
 export const TOOL_TRI = 'triangle';
 export const TOOL_POLYGON = 'polygon';
+export const MENU_PARCEL = 'parcel';

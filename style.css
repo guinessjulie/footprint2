@@ -18,6 +18,39 @@ canvas{
     background-color: #3a4b5c;
 }
 
+.menu{
+   top : 0px;
+   left :  25px; 
+   width : 100vh; 
+   position:absolute;
+   background-color : #3a4b5c  
+}
+.menu .group{
+    border-bottom: thin solid #4b5c6d
+}
+.menu .group .menuitem{
+    color:#ccd;
+    width :50px;
+    height:50px;
+    cursor : pointer;
+    
+}
+
+
+.menu .menuitem  {
+    border-right : 2px solid #999;
+    width : 50px;
+    height: 50px;
+    position:relative;
+    left : 24px;
+    top : 0px;
+}
+.menu .group .menuitem.active,
+.menu .group .menuitem:hover{
+    background-color: #345;
+}
+
+
 .toolbox.left{
     top : 0px;
     left : 0px;
@@ -25,6 +58,9 @@ canvas{
 .toolbox.right{
     top:0px;
     right:0px;
+}
+.toolbox.top{
+    top : 0px;
 }
 
 .toolbox .group{

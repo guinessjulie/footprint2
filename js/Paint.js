@@ -11,9 +11,10 @@ import {
     TOOL_RECT, 
     TOOL_LINE ,    TOOL_CIRCLE, 
     TOOL_TRI,
-    TOOL_POLYGON} from './Tools.js'
+    TOOL_POLYGON,
+    MENU_PARCEL
+} from './Tools.js'
 import Polygon from './Polygon.js';
-import Point from './Vertex.js';
 import Pen from './Pen.js';
 import Fill from './fill.js';
 
@@ -24,7 +25,7 @@ export default class Paint{
         this.ctx.lineWidth = 1;
         this.brushsize = 4;
         this.color = '#000'
-        this.ctx.strokeStyle =this.color;        
+        this.ctx.strokeStyle =this.color;                
     }
     set activeTool (tool){
         this.tool = tool;
@@ -48,6 +49,13 @@ export default class Paint{
         this.canvas.onmousedown = (e)=> this.onMouseDown(e);
     }
     onMouseDown(e){
+        console.log('MouseDown', this.tool, e)
+
+        if(this.tool === MENU_PARCEL ){
+            let elt = canvas.getBoundingClientRect()
+            console.log(elt)
+            //this.ga = new Ga()
+        }
         this.canvas.onmousemove = (e) => this.onMouseMove(e);
         document.onmouseup = (e)=> this.onMouseUp(e);
         this.canvas.oncontextmenu = (e) =>this.onContextMenu(e);
@@ -74,7 +82,7 @@ export default class Paint{
                 
                 new Fill(this.canvas, Math.round(this.startPos.x), Math.round(this.startPos.y), this.color);
                 break;
-            case TOOL_ERASER: 
+            case TOOL_ERASER:             
             default:
                 break;
         }
@@ -178,6 +186,7 @@ export default class Paint{
             this.rects = [];
         }                
         this.rects.push(rect); 
+
     }
     finalizeCircle(){
         let w = this.crntPos.x -this.startPos.x;
