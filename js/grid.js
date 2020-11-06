@@ -12,6 +12,7 @@ export default class Grid{
         this.cols = Math.floor((max.x - min.x) / size);
         this.rows = Math.floor((max.y - min.y) / size);
         this.grid = this.to2DArray(this.rows, this.cols )
+        //this.initDisplayGrid(size);
         this.initDisplayGrid(size);
         this.chromosome = ''
     }
@@ -22,24 +23,38 @@ export default class Grid{
         }
         return arr;
     }
-    
     initDisplayGrid(size){
         
         for (let col in [...new Array(this.cols).keys()]){
             for(let row in [...new Array(this.rows).keys()]){;
-                this.ctx.fillStyle = '#eef'
+                this.ctx.save()
+                this.ctx.fillStyle = '#cef'
                 this.ctx.strokeStyle = '#333';
-                this.ctx.fillRect(col*size, row*size, size-3, size-3);
+                let loc = {col, row, size};
+                let x = this.tr(loc).x ;//this.min.x+col*size;
+                let y = this.tr(loc).y ;//this.min.y+row*size;
+                let w = this.tr(loc).w;
+                this.ctx.translate(x, y)
+                this.ctx.fillRect(0, 0, w, w);
                 this.ctx.lineWidth = 1;
-                this.ctx.strokeRect(col*size, row*size, size-3, size-3);
+                this.ctx.strokeRect(0, 0, w, w);
                 this.ctx.font = '9px mono';
-                //this.ctx.fillText(col,  col*size, row*size)
                 let num = col.toString() + ' '+row.toString();
-                this.ctx.strokeText(num, col*size+3, row*size+(size/2) )
+                this.ctx.strokeText(num, 3, (size/2) )
+                this.ctx.restore()
             }
         }   
     }
     
+
+    tr(loc){
+        return{
+            x: this.min.x + loc.col*loc.size,
+            y: this.min.y + loc.row*loc.size,
+            w : loc.size - 3
+
+        }
+    }
     startFootPrint(iter){
         this.initCell(iter);
     }
@@ -50,10 +65,17 @@ export default class Grid{
         this.ctx.fillRect(col*size, row*size, size-3, size-3)
     }
     displayCell(col, row, color='black'){
+        this.ctx.save();
         let size = this.size
         this.ctx.lineWidth = 1 ;
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(col*size, row*size, size-3, size-3);
+        let loc = {col, row, size}
+        let x = this.tr(loc).x
+        let y = this.tr(loc).y;
+        let w = this.tr(loc).w;
+        this.ctx.translate(x, y);
+        this.ctx.fillRect(0, 0, w, w);
+        this.ctx.restore();
     }
 
     initCell(iter){
@@ -119,8 +141,8 @@ export default class Grid{
                 cur = next; 
             }
             else break;    
+            
         }
-
     }
 
 

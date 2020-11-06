@@ -310,5 +310,13 @@ export default class Paint{
         }
         this.ctx.stroke();
     }
+    //일단 첫번째 폴리건에 대해서만 기능을 작성하고 확장합시다. 
+    toParcel(i){
+        if(this.polygons == undefined || this.polygons.length === 0)
+        {
+            alert('create or load Parcel First')
+        }
+        return this.polygons[i];
+    }
 
 }

@@ -9,4 +9,5 @@ export default class Polygon{
     get last(){
         return this.vertices[this.vertices.length-1];
     }
+    
 }
