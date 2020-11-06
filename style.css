@@ -1,6 +1,10 @@
+*{
+    margin:0px;
+}
 body{
     margin:0px;
     background-color: #283333;
+    font-family : 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
 
 canvas{
@@ -10,6 +14,7 @@ canvas{
     top : 50%;
     transform : translate(-50%, -50%);
     background-color: blanchedalmond;
+
 }
 
 .toolbox{
@@ -28,28 +33,40 @@ canvas{
 .menu .group{
     border-bottom: thin solid #4b5c6d
 }
-.menu .group .menuitem{
-    color:#ccd;
-    width :50px;
-    height:50px;
+
+.navbar { 
+    top:0px;
+    margin-top : 10px;
+}
+ul {
+    top:0px;
+    margin-right : 10px;
+    list-style-type: none;
+    text-decoration : none;
+    overflow:hidden;
+    background-color : #3a4b5c;
+    color : #ccd;
     cursor : pointer;
-    
 }
 
-
-.menu .menuitem  {
-    border-right : 2px solid #999;
-    width : 50px;
-    height: 50px;
-    position:relative;
-    left : 24px;
+  li {
+      top:0px;
+      float : left;
+      overflow: hidden;
+  }
+li.navitem{
+    padding : 10px;
+    font-size : 16px;
+    border-right : thin solid #4b5c6d;
+}
+.navitem:hover,
+.navitem:active{
+    background-color : #234;
+}
+.nav-top{
     top : 0px;
+    left : 50px;
 }
-.menu .group .menuitem.active,
-.menu .group .menuitem:hover{
-    background-color: #345;
-}
-
 
 .toolbox.left{
     top : 0px;
@@ -76,7 +93,7 @@ canvas{
 
 .toolbox .group .item.active,
 .toolbox .group .item:hover{
-    background-color: #345;
+    background-color: #234;
 }
 
 .toolbox .group.stroks .item{

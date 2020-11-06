@@ -1,48 +1,128 @@
+import {mapGeno} from './cell.js'
+import Cell from './cell.js'
+import {rand, geneToColor} from './utils.js'
+
 export default class Grid{
     constructor(min, max, size){
+        this.canvas = document.getElementById('canvas');
+        this.ctx = canvas.getContext('2d');
         this.size = size;
         this.min = min;
         this.max = max;   
-        this.cols = Math.floor((max.y - min.y) / size);
-        this.rows = Math.floor((max.x - min.x) / size);
+        this.cols = Math.floor((max.x - min.x) / size);
+        this.rows = Math.floor((max.y - min.y) / size);
+        this.grid = this.to2DArray(this.rows, this.cols )
+        this.initDisplayGrid(size);
+        this.chromosome = ''
     }
-
-    set gridSize(newSize) {
-        if(this.size){
-            this.newSize
-        }
-    } 
-
-    get gridSize(){
-        return this.size;
-    }
-
     to2DArray(){
-        console.log(this.cols, this.rows)
         let arr = new Array(this.cols);
         for (let i = 0; i < arr.length; i++) {
-            arr[i] = new Array(this.rows);
+            arr[i] = new Array(this.rows-1);
         }
         return arr;
     }
-
-    createGrid(){
-        let canvas = document.getElementById('canvas');
-        let ctx = canvas.getContext('2d');
-        let footprint = this.to2DArray(this.cols, this.rows)
-        let size = this.size;
+    
+    initDisplayGrid(size){
+        
         for (let col in [...new Array(this.cols).keys()]){
-            for(let row in [...new Array(this.rows).keys()]){
-                //footprint[col][row] = Math.random()*255;
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = 'lightblue';
-                console.log(col, row, size)
-                ctx.strokeRect(row*size, col*size, size, size);
+            for(let row in [...new Array(this.rows).keys()]){;
+                this.ctx.fillStyle = '#eef'
+                this.ctx.strokeStyle = '#333';
+                this.ctx.fillRect(col*size, row*size, size-3, size-3);
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeRect(col*size, row*size, size-3, size-3);
+                this.ctx.font = '9px mono';
+                //this.ctx.fillText(col,  col*size, row*size)
+                let num = col.toString() + ' '+row.toString();
+                this.ctx.strokeText(num, col*size+3, row*size+(size/2) )
             }
+        }   
+    }
+    
+    startFootPrint(iter){
+        this.initCell(iter);
+    }
+    displayGrid(col, row, color){
+        this.ctx.fillStyle = color;
+        let size = this.size;
+        this.ctx.lineWidth = 1;
+        this.ctx.fillRect(col*size, row*size, size-3, size-3)
+    }
+    displayCell(col, row, color='black'){
+        let size = this.size
+        this.ctx.lineWidth = 1 ;
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(col*size, row*size, size-3, size-3);
+    }
+
+    initCell(iter){
+        let cur = new Cell(Math.floor(this.cols/2), Math.floor(this.rows/2));
+        this.chromosome += cur.geno;
+        cur.occupied = true;
+        this.grid[cur.col][cur.row] = cur;
+        this.displayCell(cur.col, cur.row, geneToColor(cur.geno));
+        this.createFootPrint(cur,iter);
+  //      this.createFootprintTest(cur);
+    }
+
+    nextState(cell){
+        let col = +cell.col;
+        let row = +cell.row;
+        let next;
+        const grid = (col, row)=>this.grid[col][row];
+        switch(cell.geno){
+            case '00' : //East
+                col = col === this.cols -1 ? col : col+1;
+                while(grid(col,row) && col < this.cols-1){
+                    col +=1;
+                }           
+                break;
+            case '10' : //West
+                col = col === 0? col : col-1;
+                while(grid(col,row) && col > 0){
+                    col -=1;
+                }
+                break;
+            case '01' : //South
+                row = row===this.rows -1 ? row : row+1;
+                while(grid(col,row) && row < this.rows-1){
+                    row +=1;
+                }
+                break;
+            case '11' : //North
+                row = row === 0? row : row-1;
+                while(grid(col, row) && row >0 ){
+                    row -=1;
+                }
+                break;
+            default:
+                break;
         }
 
-        //todo paint object 가 있나 확인 거기서  ctx 를 가져와야 한다.
-
-        
+        next = new Cell(col, row);
+        this.grid[col][row] = next;
+        return next;
     }
+
+    createFootPrint(cur,iter){
+        console.log('iter',iter)
+        for (let i = 0; i < iter; i++) {
+            console.log('i', i, 'chromosome', this.chromosome);     
+            let next = this.nextState(cur)
+            console.log('next cell' ,this.grid[next.col][next.row])
+            this.chromosome += ' '+ cur.geno;
+            if(next) {
+                next.occupied=true;
+                this.displayCell(next.col, next.row, geneToColor(next.geno));
+                console.log('next grid', this.grid[next.col][next.row]);
+                cur = next; 
+            }
+            else break;    
+        }
+
+    }
+
+
 }
+

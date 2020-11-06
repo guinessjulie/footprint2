@@ -34,4 +34,28 @@ export function toGrid(cols, rows){
     }
     return arr;
 }
+export const rand = (size) => Math.floor(Math.random()*(size));
+export const geneToColor = (ge) =>{
+    switch(ge){
+        case '10' : return '#f5a23d';
+        case '00' : return '#9ff53d';
+        case '11' : return '#62c3f0';
+        case '01' : return '#ba6bf2';
+        default   : return 'white';
+    }
+}
+//not using
+export const ToColor = () => {
+    let R = Math.floor(Math.random()*110+145);
+    let G = Math.floor(Math.random()*110+145);
+    let B = Math.floor(Math.random()*110+145);
+    let color=
+    { 
+        '10' : `rgb(${R}, ${G}, ${B})`,
+        '00' : `rgb(${G}, ${B}, ${R})`,
+        '11' : `rgb(${B}, ${R}, ${G})`,
+        '01' : `rgb(${R}, ${B}, ${G})`
+    } 
+    return color
+}
 

@@ -10,10 +10,10 @@ import {TOOL_ERASER,
 
 import Point from './Point.js'    
 import Paint from './Paint.js'
-import Parcel, {parcelMenuClickHandle}  from './Parcel.js';
+import Parcel, {onParcel, onGrid, onFootPrint, testHandle}  from './Parcel.js';
 import Polygon from './Polygon.js';
-
-
+import {qry} from './alias.js'
+Node.prototype.on = Node.prototype.addEventListener;
 export const paint = new Paint("canvas")
 paint.init();
 paint.activeTool = TOOL_PEN;
@@ -98,7 +98,14 @@ document.querySelectorAll('[data-color]').forEach(
     }
 );
 
-document.querySelector('.parcel').addEventListener('click', parcelMenuClickHandle);
+qry('.parcel').on('click',onParcel);
+qry('.test').on('click', testHandle)
+qry('.grid').on('click', onGrid)
+qry('.footprint').on('click', onFootPrint)
+//let p = qry('.parcel').addEventListener('click', parcelMenuClickHandle);
+//.addEventListener('click', parcelMenuClickHandle);
+//  document.querySelector('.parcel')
+//      .addEventListener('click', parcelMenuClickHandle);
 
 // document.querySelectorAll('[data-menu]').forEach(
 //     el=>{
