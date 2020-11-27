@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src = './js/libs/canvas2svg.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js" integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw==" crossorigin="anonymous"></script>
-    <script src="./js/app.js" type='module' defer></script> 
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Canvas</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script src = './js/libs/canvas2svg.js'></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js" integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw==" crossorigin="anonymous"></script> -->
+        <!-- <script src="https://unpkg.com/mathjs@8.0.0/"></script> -->
+        <script src="./js/libs/matrix-js/lib/index.js" type = 'module'></script>
+    <script src="./js/app.js" type='module' defer></script>
 </head>
 <body>
     <div class = 'nav-top'>
@@ -22,11 +24,14 @@
             <li class ='footprint navitem' data-menu = 'footprint' title='footprint'>
                 <i class="fab fa-buromobelexperte fa-2x"></i>
             </li>
-            <li class = 'test navitem' data-menu="test" title='test'>
+            <li class = 'validate navitem' data-menu="validate" title='validate'>
                 <i class="fas fa-eraser fa-2x"></i>
-            <li class = 'Contact navitem'>
+            <li class = 'parcel-footprint  navitem' data-menu = "preview" title="preview">
                 <i class="fab fa-accusoft fa-2x"></i></li>
-            <li class = 'About navitem'>
+            <li class='populate navitem' data-menu="populate" title="populate">
+                <i class="fas fa-arrows-alt fa-2x"></i>
+            </li>
+            <li class = 'evolve navitem' data-menu='evolve' title='evolve'>
                 <i class="fab fa-airbnb fa-2x"></i>
             </li>
             <li class = 'About navitem'>
@@ -115,10 +120,8 @@
             <div class='item' data-brush-size = '24' id='24' title='24 pixel'>
                 <div class='stroke' style='width:24px; height:24px;'></div>
             </div>
-        </div>
-        
+        </div>        
     </div>
-    <canvas id = 'canvas' width='640' height='480'></canvas>
     <div class='toolbox right'>
         <div class='group colors'>
             <div class = 'item active' data-color='#ccd'>
@@ -151,11 +154,45 @@
             <div class = 'item' data-color='#6849f3'>
                 <div class='swatch' style='background-color: #6849f3;'></div>
             </div>
-
-        </div>
-
         </div>
     </div>
     
+       
+    <canvas id = 'canvas' width="630" height="480"></canvas>
+       
+       
+    <canvas id= 'canvas-generation' width="630" height="480"></canvas>
+       
+        <div class='param-container' style="width:640">
+            <div class = 'params'>
+                <button id="play">Evolve</button>
+                <button id="pause">Pause</button>
+                <button id="reset">Clear and Reset</button>
+                <button id="step">Step</button>
+                <button id="config">DEFAULT CONFIG</button>
+            </div>
+            <div style="display: inline-block;">
+                <div>
+                <span>Step Interval (ms)</span>
+                <input type="range" id="intervalIn" max="500" step="10">
+                <output id="intervalOut"></output>
+                </div>
+                <div>
+                <span>Population Size</span>
+                <input type="range" id="popSizeIn" max="100" step="1">
+                <output id="popSizeOut"></output>
+                </div>
+                <span>Crossover Chance</span>
+                <input type="range" id="pCrossIn" max="1" step=".01">
+                <output id="pCrossOut"></output>
+                
+                <div>
+                <span>Mutation Chance</span>
+                <input type="range" id="pMutateIn" max="1" step=".01">
+                <output id="pMutateOut"></output>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

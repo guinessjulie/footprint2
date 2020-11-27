@@ -5,7 +5,7 @@ export default class Cell{
         this.col = col;
         this.row = row;
         this.geno = Math.floor(Math.random()*4).toString(2).padStart(2,'0');
-        this.occupied=false;
+        //this.occupied=false; //deleted for refactoring
         this.valid= this.validation();
     }  
     validation(){
