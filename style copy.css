@@ -1,0 +1,129 @@
+*{
+    margin:0px;
+}
+body{
+    margin:0px;
+    background-color: #283333;
+    font-family : 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+
+canvas{
+    position: absolute;   
+    border: 1px solid black;
+    left : 50%;
+    top : 50%;
+    transform : translate(-50%, -50%);
+    background-color: blanchedalmond;
+
+}
+
+.ga-container{
+    position : absolute;
+    border : 1px solid black;
+    left : 10%;
+    top : 80%;
+    background-color : white;
+}
+
+.toolbox{
+    height : 100vh;
+    position : absolute;
+    background-color: #3a4b5c;
+}
+
+.menu{
+   top : 0px;
+   left :  25px; 
+   width : 100vh; 
+   position:absolute;
+   background-color : #3a4b5c  
+}
+.menu .group{
+    border-bottom: thin solid #4b5c6d
+}
+
+.navbar { 
+    top:0px;
+    margin-top : 10px;
+}
+ul {
+    top:0px;
+    margin-right : 10px;
+    list-style-type: none;
+    text-decoration : none;
+    overflow:hidden;
+    background-color : #3a4b5c;
+    color : #ccd;
+    cursor : pointer;
+}
+
+  li {
+      top:0px;
+      float : left;
+      overflow: hidden;
+  }
+li.navitem{
+    padding : 10px;
+    font-size : 16px;
+    border-right : thin solid #4b5c6d;
+}
+.navitem:hover,
+.navitem:active{
+    background-color : #234;
+}
+.nav-top{
+    top : 0px;
+    left : 50px;
+}
+
+.toolbox.left{
+    top : 0px;
+    left : 0px;
+}
+.toolbox.right{
+    top:0px;
+    right:0px;
+}
+.toolbox.top{
+    top : 0px;
+}
+
+.toolbox .group{
+    border-bottom : thin solid #4b5c6d;
+}
+.toolbox .group .item{
+    padding: 10px;    
+    color:#cdd;
+    width : 24px;
+    height: 24px;
+    cursor:pointer;
+}
+
+.toolbox .group .item.active,
+.toolbox .group .item:hover{
+    background-color: #234;
+}
+
+.toolbox .group.stroks .item{
+    position: relative;
+}
+
+.toolbox .group.stroks .item .stroke{
+    background-color: #cdd;
+    position :relative;
+    border-radius:50%;
+    transform: translate(-50%, -50%);
+    left : 50%;
+    top : 50%;
+}
+
+.toolbox .group.colors .item .swatch {
+    border : 2px solid black;
+    width : 20px;
+    height: 20px;
+    position:relative;
+    left : 0px;
+    top : 0px;
+}
+

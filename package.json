@@ -1,0 +1,27 @@
+{
+  "name": "footprint",
+  "version": "1.0.0",
+  "description": "- [ ] Draws function - [ ] Drawing component Save - [x] Dynamic drawing - [x] grid validation  - [ ] population # Todo - [ ] calculate cost function     - [x] buildingFloorRatio     - [x] fitness function - [v] how to make polylgon drwan in canvas to be accessible from parcel - [ ] import parcel for polygon address from map - [ ] convert to pixcel space - [ ] convert minimum cell 1m - [ ] specify Road line and 2m",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guinessjulie/footPrintBuilder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guinessjulie/footPrintBuilder/issues"
+  },
+  "homepage": "https://github.com/guinessjulie/footPrintBuilder#readme",
+  "dependencies": {
+    "matrix-js": "^1.5.1"
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
