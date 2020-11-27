@@ -2,20 +2,42 @@
     margin:0px;
 }
 body{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
     margin:0px;
+    padding:0px;
     background-color: #283333;
     font-family : 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
 
+canvas#canvas-generation{
+    position:absolute;
+    left:80%;
+    top:20%;
+    transform:translate(-80%, -20%);
+    background-color:#ccc;
+}
 canvas{
     position: absolute;   
     border: 1px solid black;
-    left : 50%;
-    top : 50%;
-    transform : translate(-50%, -50%);
+    left : 20%;
+    top : 20%;
+    transform : translate(-20%, -20%);
     background-color: blanchedalmond;
-
+    box-sizing:border-box;
+    width:630px;
+    height:480px;
+} 
+.param-container{
+    position:absolute;
+    padding:10px;
+    left : 30%;
+    top : 65%;
+    background-color:powderblue;
 }
+
 
 .toolbox{
     height : 100vh;
@@ -36,10 +58,13 @@ canvas{
 
 .navbar { 
     top:0px;
-    margin-top : 10px;
+    margin-top:0px;
+    /* margin-top : 10px; */
 }
 ul {
-    top:0px;
+    top:0;
+    margin-top:0px;
+    padding-top:0px;
     margin-right : 10px;
     list-style-type: none;
     text-decoration : none;
@@ -49,13 +74,15 @@ ul {
     cursor : pointer;
 }
 
-  li {
-      top:0px;
+.nav-top ul{
+    padding-inline-start:0px;
+}
+  li {      
       float : left;
       overflow: hidden;
   }
 li.navitem{
-    padding : 10px;
+    padding:10px;
     font-size : 16px;
     border-right : thin solid #4b5c6d;
 }
@@ -64,8 +91,7 @@ li.navitem{
     background-color : #234;
 }
 .nav-top{
-    top : 0px;
-    left : 50px;
+    margin-top : 0px;
 }
 
 .toolbox.left{
@@ -75,9 +101,6 @@ li.navitem{
 .toolbox.right{
     top:0px;
     right:0px;
-}
-.toolbox.top{
-    top : 0px;
 }
 
 .toolbox .group{

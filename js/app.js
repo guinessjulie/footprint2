@@ -10,7 +10,7 @@ import {TOOL_ERASER,
 
 import Point from './Point.js'    
 import Paint from './Paint.js'
-import Parcel, {onParcel, onGrid, onFootPrint, testHandle}  from './Parcel.js';
+import Parcel, {onParcel, onGrid, onFootPrint, onValidate, onParcelFootprint, onPopulate}  from './Parcel.js';
 import Polygon from './Polygon.js';
 import {qry} from './alias.js'
 Node.prototype.on = Node.prototype.addEventListener;
@@ -99,9 +99,11 @@ document.querySelectorAll('[data-color]').forEach(
 );
 
 qry('.parcel').on('click',onParcel);
-qry('.test').on('click', testHandle)
+qry('.validate').on('click', onValidate);
 qry('.grid').on('click', onGrid)
 qry('.footprint').on('click', onFootPrint)
+qry('.parcel-footprint').on('click', onParcelFootprint)
+qry('.populate').on('click', onPopulate)
 //let p = qry('.parcel').addEventListener('click', parcelMenuClickHandle);
 //.addEventListener('click', parcelMenuClickHandle);
 //  document.querySelector('.parcel')

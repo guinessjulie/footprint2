@@ -314,9 +314,9 @@ export default class Paint{
     toParcel(i){
         if(this.polygons == undefined || this.polygons.length === 0)
         {
-            alert('create or load Parcel First')
+            return undefined;
         }
-        return this.polygons[i];
+        return this.polygons[i].vertices;
     }
 
 }

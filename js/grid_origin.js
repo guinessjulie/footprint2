@@ -5,22 +5,18 @@ import Polygon from './Polygon.js';
 import Vec2 from './Vec2.js';
 import matrix from './libs/matrix-js/lib/index.js'
 import {floorAreaRatio, fitnessFaRatio} from './gaParams.js'
-import Individual from './ga/individual.js';
-import { CELL_SIZE } from './global.js';
-import { matrixValCount } from './ga/fitness.js';
-
 export default class Grid{
-    constructor(min, max, CELL_SIZE){
+    constructor(min, max, size){
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
-        this.size = CELL_SIZE;
+        this.size = size;
         this.min = min;
         this.max = max;   
-        this.cols = Math.floor((max.x - min.x) / this.size);
-        this.rows = Math.floor((max.y - min.y) / this.size);
+        this.cols = Math.floor((max.x - min.x) / size);
+        this.rows = Math.floor((max.y - min.y) / size);
         this.grid = this.to2DArray(this.rows, this.cols );
         this.validGrid = this.to2DArray(this.rows, this.cols);
-        this.initDisplayGrid(this.size);
+        this.initDisplayGrid(size);
         this.chromosome = ''
         this.activeCell = 0;
         this.foot = this.to2DArray();
@@ -156,7 +152,6 @@ export default class Grid{
         return next;
     }
 
-    //in this step, chromosome for iter number of code is completed. now we have this.chromosome which is a individual
     setFootprintMatrixPrint(cur,iter){
    
         for (let i = 0; i < iter; i++) {
@@ -171,7 +166,6 @@ export default class Grid{
             else break;    
             
         }
-        this.individual = new Individual(this.chromosome);
     }
 
     parcelArea(vertices) {
@@ -197,7 +191,7 @@ export default class Grid{
         this.displayValidCell(vertices);
         
         //todo move to costfunction
-        //let validCount = this.matrixValCount(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
+        //let validCount = this.el_count(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
         //let validArea = validCount * this.size*this.size;
         //console.log('validCount', validCount,'validArea', validArea);
         //console.log('floorAreaRatio', floorAreaRatio(area, validArea))
@@ -261,7 +255,7 @@ export default class Grid{
     validFootprint(vertices){
         console.log('this.foot', this.foot);
         console.log('this.validGrid', this.validGrid);
-        let validCount = matrixValCount(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
+        let validCount = this.el_count(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
         let validArea = validCount * this.size*this.size;
         console.log('validArea',  validArea);
         let area2 = this.parcelArea(vertices).area;
@@ -291,18 +285,18 @@ export default class Grid{
         }
     }
 
-//    matrixValCount(mat, val){
-//        let sum = 0;
-//        for (let col = 0; col < mat.length; col++) {
-//            for (let row = 0; row < mat.length; row++) {
-//               const element = mat[col][row];
-//               if (element === val){
-//                    sum+=1;
-//                }
-//            }
-//        }
-//        return sum;
-//    }
+    el_count(mat, val){
+        let sum = 0;
+        for (let col = 0; col < mat.length; col++) {
+            for (let row = 0; row < mat.length; row++) {
+               const element = mat[col][row];
+               if (element === val){
+                    sum+=1;
+                }
+            }
+        }
+        return sum;
+    }
     
     onPopulate(){
         console.log('populate');
