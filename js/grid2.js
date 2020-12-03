@@ -1,14 +1,18 @@
 import {mapGeno} from './cell.js'
-import Cell from './cell.js'
+//import Cell from './cell.js'
+import Cell from './cell2.js'
 import {rand, geneToColor} from './utils.js'
 import Polygon from './Polygon.js';
 import Vec2 from './Vec2.js';
 import matrix from './libs/matrix-js/lib/index.js'
-import {floorAreaRatio, fitnessFaRatio} from './gaParams.js'
+import {floorAreaRatio, fitnessFaRatio, dnaLength, params} from './gaParams.js'
 import Individual from './ga/individual.js';
-import { CELL_SIZE } from './global.js';
+import { CELL_SIZE, permitFaRatio } from './global.js';
 import { matrixValCount } from './ga/fitness.js';
+import DNA from './ga/dna.js'
+import { parcel } from './ProcessParcel.js'
 
+//import { getParcel } from './Parcel.js'
 export default class Grid{
     constructor(min, max, CELL_SIZE){
         this.canvas = document.getElementById('canvas');
@@ -21,8 +25,8 @@ export default class Grid{
         this.grid = this.to2DArray(this.rows, this.cols );
         this.validGrid = this.to2DArray(this.rows, this.cols);
         this.initDisplayGrid(this.size);
-        this.chromosome = ''
-        this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당만 하고 이걸 가지고 뭘 하는 지 모르겠다.   todo delete
+        this.nitro = ''
+        this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당 validCellCount로 쓸 수 있을 거 같다. 
         this.foot = this.to2DArray();
     }
     to2DArray(){
@@ -71,30 +75,75 @@ export default class Grid{
         }
     }
 
-    //todo DNA 클라스에서  gene  생성하는 걸 맞기자.
-    //transform from onStartFootPrint to createDNA
-    createDNA(iter){
-        let dna = new DNA(iter, [this.cols, this.rows])
-        return dna;
-    }
+
     //todo seperate from onStartFootPrint to createDNA and drawFootPrint()
-    drawFootPrint(iter){
-        for(let i=0; i<iter; i++){
-            let next = this.nextState(cur)
+    dnaToFootprintMatrix(dna){
+        let col = dna.startPos.col;
+        let row = dna.startPos.row;
+        let cur = {}
+        let activeCells = []
+        let gene = dna.nitro[0] // from nextState에서  geno를 새로 생성하지 않고 있는 DNA 에 따라 쉐입을 생성하자
+        let cell = {col : col, row: row, active:0}
+        activeCells.push(cell)
+        this.grid[col][row] = cell;
+        for(let i=1; i<dna.nitro.length; i++){
+            gene = dna.nitro[i];
+            cell = this.nextCell(cell, gene)
+            activeCells.push(cell);
         }
-
+        console.log('activeCells', activeCells);
     }
 
-    //in this step, chromosome for iter number of code is completed. now we have this.chromosome which is a individual
-    setFootprintMatrixPrint(cur,iter){
+    nextCell(cell, nitro){ 
+        let col = +cell.col;
+        let row = +cell.row;
+        let next;
+        const grid = (col, row)=>this.grid[col][row];
+        switch(nitro){
+            case '00': //east
+            col = col === this.cols - 1 ? col : col+1;
+            while(grid(col,row) && col < this.cols-1){
+                col +=1;
+            }           
+            break;
+        case '10' : //West
+            col = col === 0? col : col-1;
+            while(grid(col,row) && col > 0){
+                col -=1;
+            }
+            break;
+        case '01' : //South
+            row = row===this.rows -1 ? row : row+1;
+            while(grid(col,row) && row < this.rows-1){
+                row +=1;
+            }
+            break;
+        case '11' : //North
+            row = row === 0? row : row-1;
+            while(grid(col, row) && row >0 ){
+                row -=1;
+            }
+            break;
+        default:
+            break;
+        }
+        return {col:col, row:row}
+//        next = new Cell(col, row);
+//        this.grid[col][row] = next;
+//        return next;
+//        }
+
+    }
+    //in this step, nitro for iter number of code is completed. now we have this.nitro which is a individual
+    setFootprintMatrixPrint(cur,iter, dna){
    
         for (let i = 0; i < iter; i++) {
-            let next = this.nextState(cur);
-            console.log('next[', i,']', this.grid[next.col][next.row]);
-            this.chromosome += ' '+ next.geno;
+            let next = this.nextState(cur,i, dna);
+            console.log('next[', i+1,']', this.grid[next.col][next.row]);
+            this.nitro += ' '+ next.nitrobasis;
             if(next) {
                 this.activeCell+=1;
-                this.displayCell(next.col, next.row, geneToColor(next.geno));
+                this.displayCell(next.col, next.row, geneToColor(next.nitrobasis));
                 cur = next; 
             }
             else break;    
@@ -102,19 +151,29 @@ export default class Grid{
         }
     }
 
-
-    onStartFootPrint(iter){
+    createDNA(dnaLen){
+        let dna = new DNA(dnaLen, [this.grid.col], [this.grid.row]);
+        return dna;
+    }
+    onStartFootPrint(){
         //this.initCell(iter);
-        let cur = new Cell(Math.floor(this.cols/2), Math.floor(this.rows/2));
+        //let parcelArea = parcel.area;
+        //let dnaSize = dnaLength(parcelArea, permitFaRatio)
+        //let col = this.grid.col;
+        //let row = this.grid.row;
+        //let dna = new DNA(dnaSize, [col, row])
+        let dnaLen = dnaLength(parcel.area, permitFaRatio);
+        let dna = this.createDNA(dnaLen);
+        let cur = new Cell(Math.floor(this.cols/2), Math.floor(this.rows/2), dna.gene[0]);
         if(!cur) return false;
         this.activeCell +=1;
-        this.chromosome += cur.geno; //todo to move Individual
+        this.nitro += cur.nitrobasis; //todo to move Individual
         //cur.occupied = true; //deleted for refactoring
         //this.footprint.push([cur.col, cur.row]); //refactor
         this.grid[cur.col][cur.row] = cur;
         console.log('initial cell', cur)
-        this.displayCell(cur.col, cur.row, geneToColor(cur.geno));
-        this.setFootprintMatrixPrint(cur,iter);
+        this.displayCell(cur.col, cur.row, geneToColor(cur.nitrobasis));
+        this.setFootprintMatrixPrint(cur,dnaLen, dna);
     }
     displayGrid(col, row, color){
         this.ctx.fillStyle = color;
@@ -137,12 +196,12 @@ export default class Grid{
     }
 
 
-    nextState(cell){
+    nextState(cell, iter, dna){
         let col = +cell.col;
         let row = +cell.row;
         let next;
         const grid = (col, row)=>this.grid[col][row];
-        switch(cell.geno){
+        switch(cell.nitrobasis){
             case '00' : //East
                 col = col === this.cols -1 ? col : col+1;
                 while(grid(col,row) && col < this.cols-1){
@@ -171,7 +230,7 @@ export default class Grid{
                 break;
         }
 
-        next = new Cell(col, row);
+        next = new Cell(col, row, dna.gene[iter+1]);
         this.grid[col][row] = next;
         return next;
     }
@@ -182,7 +241,7 @@ export default class Grid{
         return {area, poly};
     }
 
-
+    //menu > validate >
     onValidateCell(vertices){
         let size = this.size;
         let {area, poly} = this.parcelArea(vertices);
@@ -293,6 +352,18 @@ export default class Grid{
         }
     }
 
+    onCreateFloor(){
+        let legalPlane = matrix(this.foot).and(matrix(this.validGrid)) ; 
+        this.displayCells(legalPlane, 1, 'black');
+    }
+
+    onPopulate(){
+        for(let i=0; i<params.numIndividuals; i++){
+            console.log('i', i );
+            this.onStartFootPrint();
+        }
+    }
+
 //    matrixValCount(mat, val){
 //        let sum = 0;
 //        for (let col = 0; col < mat.length; col++) {
@@ -306,7 +377,5 @@ export default class Grid{
 //        return sum;
 //    }
     
-    onPopulate(){
-        console.log('populate');
-    }
 }
+

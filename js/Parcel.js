@@ -3,8 +3,12 @@ import {toBBox, toGrid } from './utils.js'
 import {domRectToPolygon} from './utils.js'
 import Rect from './Rect.js'
 import {paint} from './app.js'
-import Grid from './grid.js';
+//import Grid from './grid.js';
+import Grid from './grid2.js';
 import Vec2 from './Vec2.js'
+import { matrixValCount } from './ga/fitness.js'
+import { dnaLength  } from './gaParams.js'
+import Polygon from './Polygon.js'
 
 export default class Parcel{
     constructor(vertices = [], gridsize = 30){
@@ -14,8 +18,13 @@ export default class Parcel{
         if( vertices && vertices.length > 3){
             this.bbox = toBBox(vertices);
         }
+        this.area = this.getArea();
     }
-
+    getArea(){
+        if(this.vertices.length > 2){
+            return new Polygon(this.vertices).area();
+        }
+    }
     fromPolygon(polygon){
         this.vertices = polygon.vertices;
     }
@@ -49,58 +58,4 @@ export default class Parcel{
     }
 
 
-}
-export let parcel // oh i don't like to use global variable no matter how javascripts sucks
-const createDefaultParcel = () =>{
-    let domRect = canvas.getBoundingClientRect();    
-    let rect = new Rect(new Vec2(0,0), new Vec2(domRect.width, domRect.height))
-    let vertices = rect.toPolygon()
-    parcel = new Parcel(vertices);
-    //parcel = new Parcel(domRectToPolygon(domRect)); // 현재는 그냥 캔버스 크기로 정함
-}
-
-export function onParcel(){
-    if(paint){
-        let i = 0;//todo to select parcel
-        let poly = paint.toParcel(i);
-        if(poly == undefined ){
-            createDefaultParcel();
-        }
-        else{
-            parcel = new Parcel(poly, 30)
-        }
-    }
-    else{
-        createDefaultParcel()
-    }
-    //todo get polygon from t
-}
-export function onGrid(){
-    if(parcel == undefined){
-        onParcel();
-    }
-    parcel.grid = new Grid(parcel.bbox.min, parcel.bbox.max, 30)    ;
-    //parcel.grid = new Grid(parcel.bbox.min, parcel.bbox.max, 10)    
-}
-
-export function onValidate() {
-    console.log('onValidate', this);
-    parcel.grid.onValidateCell(parcel.vertices);
-}
-
-export function onFootPrint(){
-    parcel.grid.onStartFootPrint(10);
-}
-
-export function onParcelFootprint(){
-    if(parcel){
-        parcel.draw();
-    }
-    if(parcel.grid){
-        parcel.grid.onCreateFloor(parcel.vertices)
-    }
-}
-
-export function onPopulate(){
-    parcel.grid.onPopulate()
 }

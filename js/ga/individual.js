@@ -1,7 +1,6 @@
 
 export default class Individual{
     constructor(dna){
-        this.dna = dna;
-        this.fitness = calcFitness(dna);
+        this.dna = dna; //array of 20 binary digit        
     }
 }

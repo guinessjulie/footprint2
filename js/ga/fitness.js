@@ -1,4 +1,4 @@
-function calcParcelArea(vertices){
+export function calcParcelArea(vertices){
         let  i = -1;
         let  n = vertices.length;
         let  a;
