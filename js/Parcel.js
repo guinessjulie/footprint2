@@ -1,6 +1,7 @@
 import {toBBox} from './utils.js'
 //import Grid from './grid.js';
 import Polygon from './Polygon.js'
+import {drawOnCanvas} from './utils.js';
 
 export default class Parcel{
     constructor(vertices = [], gridsize = 30){
@@ -21,19 +22,20 @@ export default class Parcel{
     fromPolygon(polygon){
         this.vertices = polygon.vertices;
     }
-    draw(color = "rgb(252, 186, 3, 0.5)"){
-            // Filled triangle
-        this.ctx.fillStyle = color;
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.vertices[0].x, this.vertices[0].y);
-        for (let i = 1; i < this.vertices.length; i++) {
-            const path = this.vertices[i];
-            this.ctx.lineTo(path.x, path.y);            
-        }
-        this.ctx.closePath();            
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.stroke();
+    draw(){
+        drawOnCanvas('canvas', this.vertices)
+        // // Filled triangle
+        // this.ctx.fillStyle = color;
+        // this.ctx.beginPath();
+        // this.ctx.moveTo(this.vertices[0].x, this.vertices[0].y);
+        // for (let i = 1; i < this.vertices.length; i++) {
+        //     const path = this.vertices[i];
+        //     this.ctx.lineTo(path.x, path.y);
+        // }
+        // this.ctx.closePath();
+        // this.ctx.fill();
+        // this.ctx.closePath();
+        // this.ctx.stroke();
     }
 
 

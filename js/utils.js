@@ -1,5 +1,6 @@
 import Vec2 from './Vec2.js'
 import Polygon from './Polygon.js';
+import {qId} from "./alias.js";
 export function getCanvasCoords(e, canvas){
     let rect = canvas.getBoundingClientRect();
     let x = ( e.x - rect.left );
@@ -162,4 +163,20 @@ export const matrixPerimeter = m =>{
         })
     })
     return s;
+}
+export function drawOnCanvas(canvasId,vertices,clr="rgb(25, 25, 125, 0.2)" ){
+    let color = clr;
+    let canvas = qId(canvasId);
+    let ctx = canvas.getContext("2d");
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(vertices[0].x, vertices[0].y);
+    for (let i = 1; i < vertices.length; i++) {
+        const path = vertices[i];
+        ctx.lineTo(path.x, path.y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.closePath();
+    ctx.stroke();
 }

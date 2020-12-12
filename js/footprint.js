@@ -21,7 +21,8 @@ export default class Footprint {
         this.matFootprint = to2DArray(grid.cols, grid.rows);
         this.validFootprintMatrix = this.buildFootprint();
         this.calculateFitness();
-        this.displayDomInfo()
+        this.displayDomInfo();
+        this.displayPreview();
     }
     displayDomInfo(){
         let outIndividual = document.querySelector('#out-individual');
@@ -37,7 +38,7 @@ export default class Footprint {
     }
     buildFootprint() {
         let cur = new Cell(Math.floor(grid.cols / 2), Math.floor(grid.rows / 2));
-        if (cur == undefined) return false;
+        if (cur === undefined) return false;
         this.activeCell += 1;
         //let curnitro = cur.nitrobasis;
         grid.arr2d[cur.col][cur.row] = cur; //active grid cell에 cell 정보 할당.
@@ -51,7 +52,7 @@ export default class Footprint {
         }
         for (let row in [...new Array(grid.rows).keys()]) {
             for (let col in [...new Array(grid.cols).keys()]) {
-                if (grid.arr2d[col][row] == undefined) {
+                if (grid.arr2d[col][row] === undefined) {
                     this.matFootprint[col][row] = 0;
                 }
                 else {
@@ -72,49 +73,8 @@ export default class Footprint {
         this.fitness.faRatio = Math.round((floorAreaRatio(parcel.area, this.fitness.area) + Number.EPSILON)* 10000)/100;
         this.fitness.boundaryLength = matrixPerimeter(this.validFootprintMatrix) * 30;
     }
-    isAdjRight(arr, col, row) {
-        if(arr[col+1][row] === 1) {
-            return true;
-        }
-        return false;
-    }
-    isAdjLeft(arr, col, row){
-        if(arr[col-1][row] === 1){
-            return true
-        }
-        else return false;
-    }
-    isAdjUp(arr, col, row){
-        if(arr[col][row-1] === 1){
-            return true;
-        }
-        else return false;
 
-    }
 
-    isAdjDown(arr,col,row){
-        if(arr[col][row+1] === 1){
-            return true;
-        }
-        else return false;
-    }
-
-    countConseCells(arr){
-        let cnt = {}
-        let cntEl = 0;
-        let i = 0;
-        while(arr[i]===1){
-            cntEl+=1;
-            i+=1;
-        }
-        if(cntEl == undefined){
-            cnt.key = cntEl;
-            cnt.value = 1;
-        }else{
-            cnt.value = cnt.value + 1;
-        }
-        return cnt;
-    }
     //todo 주어진 1/0 array 에서 1만 출력
     displayCells(arr, id=1, color='red'){
         for (let col in [...new Array(grid.cols).keys()]){
@@ -201,4 +161,7 @@ export default class Footprint {
     // }
 
 
+    displayPreview() {
+        parcel.draw();
+    }
 }

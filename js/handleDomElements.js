@@ -33,7 +33,7 @@ export function updatepMutateOut(event){
     qId('pMutateOut').value = event.target.value;
 }
 export function updateCheckboxForceDnaSize(event){
-    gaParams.params.dnaLength = +event.target.value;
+    gaParams.params.dnaLength = event.target.value;
 }
 
 export function updateDnaLengthIn(event){

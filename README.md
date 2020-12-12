@@ -20,3 +20,11 @@
 - [ ] Preview 
 - [ ] Refresh / Cleanup / Save
 
+#OptimalFootprint Problem
+- [x] Draw Parcel in a new canvas called canvas-generation
+- [ ] grid has i's own canvas of left side
+- [ ] however OptimalFootprint tried to draw footprint with grid.displayCells
+- [ ] To solve this problem, change grid class to optinally select canvas
+- [ ] or duplicate grid on OptimalFootprint
+
+
