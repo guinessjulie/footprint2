@@ -1,7 +1,7 @@
 function isLatLngInZone(latLngs,lat,lng){
     // latlngs = [{"lat":22.281610498720003,"lng":70.77577162868579},{"lat":22.28065743343672,"lng":70.77624369747241},{"lat":22.280860953131217,"lng":70.77672113067706},{"lat":22.281863655593973,"lng":70.7762061465462}];
-    vertices_y = new Array();
-    vertices_x = new Array();
+    vertices_y = [];
+    vertices_x = [];
     longitude_x = lng;
     latitude_y = lat;
     latLngs = JSON.parse(latLngs);
@@ -43,7 +43,7 @@ function isLatLngInZone(latLngs,lat,lng){
     }
     
     return inside;
-};
+}
 //Usage:
 
 // array of coordinates of each vertex of the polygon

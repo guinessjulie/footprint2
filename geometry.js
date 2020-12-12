@@ -558,9 +558,6 @@ Geometry.prototype.triangulate = function() {
 computeHalfEdges() Computes half edges used for efficient geometry operations.
 returns new { Array of half edge objects }
 Based on ideas from*/
-http://fgiesen.wordpress.com/2012/04/03/half-edges-redux/
-
- 
 Geometry.prototype.computeHalfEdges = function() {
   var halfEdges = this.halfEdges = [];
   var faces = this.faces;

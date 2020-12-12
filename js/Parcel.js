@@ -1,18 +1,11 @@
-import BoundingBox2D from './boundingBox2D.js'
-import {toBBox, toGrid } from './utils.js'
-import {domRectToPolygon} from './utils.js'
-import Rect from './Rect.js'
-import {paint} from './app.js'
+import {toBBox} from './utils.js'
 //import Grid from './grid.js';
-import Grid from './grid2.js';
-import Vec2 from './Vec2.js'
-import { matrixValCount } from './ga/fitness.js'
-import { dnaLength  } from './gaParams.js'
 import Polygon from './Polygon.js'
 
 export default class Parcel{
     constructor(vertices = [], gridsize = 30){
         this.vertices = vertices;
+        this.poly = new Polygon(vertices);
         this.gridSize = gridsize;
         this.ctx = canvas.getContext('2d');
         if( vertices && vertices.length > 3){

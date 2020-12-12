@@ -1,19 +1,6 @@
-import {TOOL_ERASER,
-    TOOL_BRUSH,
-    TOOL_BUCKET, 
-    TOOL_PEN,
-    TOOL_RECT,
-    TOOL_LINE, 
-    TOOL_CIRCLE, 
-    TOOL_TRI,
-    TOOL_POLYGON} from './Tools.js'
-
-import Point from './Point.js'    
+import {TOOL_BRUSH, TOOL_BUCKET, TOOL_CIRCLE, TOOL_LINE, TOOL_PEN, TOOL_POLYGON, TOOL_RECT, TOOL_TRI} from './Tools.js'
 import Paint from './Paint.js'
-import Parcel from './Parcel.js'
-import Polygon from './Polygon.js';
-import {qry} from './alias.js'
-import { registerFootPrintHandle } from './footMass.js'
+import {addGAParamEventHandle, registerFootPrintHandle} from './handleDomElements.js'
 
 Node.prototype.on = Node.prototype.addEventListener;
 export const paint = new Paint("canvas")
@@ -101,3 +88,4 @@ document.querySelectorAll('[data-color]').forEach(
 );
 
 registerFootPrintHandle();
+addGAParamEventHandle();

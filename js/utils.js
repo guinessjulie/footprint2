@@ -24,42 +24,7 @@ export function rectToPolygon(rect){
     let polygon = new Polygon();
     polygon.addVer(new Vec2(rect.x))
 }
-//from d3 algorithm
-export function ptInPolygon(polygon, point) {
-  var n = polygon.vertices.length,
-      p = polygon.vertices[n - 1],
-      x = point.x, y = point.y
-      x0 = p.x, y0 = p.y,
-      x1, y1
-    let inside = false;
 
-  for (var i = 0; i < n; ++i) {
-    p = polygon.vertices[i], x1 = p.x, y1 = p.y;
-    if (((y1 > y) !== (y0 > y)) && (x < (x0 - x1) * (y - y1) / (y0 - y1) + x1)) inside = !inside;
-    x0 = x1, y0 = y1;
-    return inside;
-  }
-}
-
-
-function ptInside(point, vs) {
-    // ray-casting algorithm based on
-    // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
-    
-    var x = point[0], y = point[1];
-    
-    var inside = false;
-    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-        var xi = vs[i][0], yi = vs[i][1];
-        var xj = vs[j][0], yj = vs[j][1];
-        
-        var intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if (intersect) inside = !inside;
-    }
-    
-    return inside;
-};
 //Usage:
 
 // array of coordinates of each vertex of the polygon
@@ -110,3 +75,91 @@ export const ToColor = () => {
     return color
 }
 
+export function to2DArray(cols, rows){
+    let arr = new Array(cols);
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = new Array(rows); //changed 2020-11-09
+    }
+    return arr;
+}
+
+export function parcelArea(vertices) {
+    let poly = new Polygon(vertices);
+    let area = poly.area();
+    return {area : area, poly : poly};
+}
+
+export function reverseColRow(array){
+    let reversed = array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+    return reversed;
+}
+export function rotateRight(array) {
+    var result = [];
+    array.forEach(function (col, i, aryA) {
+        col.forEach(function (row, j, arrRow) {
+            result[arrRow.length - j - 1] = result[arrRow.length - j - 1] || [];
+            result[arrRow.length - j - 1][i] = row;
+        });
+    });
+    return result;
+}
+
+export function rotateLeft(array) {
+    var result = [];
+    array.forEach(function (col, i, arr) {
+        col.forEach(function (b, j, bb) {
+            result[j] = result[j] || [];
+            result[j][arr.length - i - 1] = b;
+        });
+    });
+    return result;
+}
+
+export function matrixPeremeter1(m){
+    let s = 0;
+    for (let i = 0; i < m.length; i++) {
+        for (let j = 0; j < m[i].length; j++) {
+            if(m[i][j]){
+                if(i <= 0 || !m[i-1][j]) s++; //왼쪽이 0이면 s증가
+                if(j <=0 || !m[i][j-1]) s++; //위쪽이 0이면 s 증가
+                if(i >= m.length -1 || !m[i+1][j]) s++//오른쪽이 0이면 s 증가
+                if(j <= m[i].length-1 || !m[i][j+1]) s++;
+
+            }
+        }
+    }
+    return s;
+}
+export const matrixPerimeter2 = m =>{
+    let row = m.length;
+    let col = m[0].length;
+    let s = 0 ;
+    for( let i = 0; i< row; i++){
+        for( let j=0; j<col; j++){
+            if(m[i][j]){
+                s-= i > 0 && m[i-1][j];
+                s-= j > 0 && m[i][j-1]
+                s -= j < col-1 && m[i][j+1];
+                s -= i < row-1 && m[i+1][j];
+                s+=4;
+            }
+        }
+    }
+    return s;
+}
+//functional
+export const matrixPerimeter = m =>{
+    let s = 0;
+    m.map((row, i)=>{
+        row.map((col, j)=>{
+            if(col){
+                s-= i > 0 && m[i-1][j]
+                s-= j > 0 && row[j-1]
+                s-= j < row.length-1 && row[j+1]
+                s-= i < m.length-1 && m[i+1][j]
+                s+= 4
+            }
+        })
+    })
+    return s;
+}

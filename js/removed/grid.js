@@ -1,25 +1,24 @@
-import {mapGeno} from './cell.js'
-import Cell from './cell.js'
-import {rand, geneToColor} from './utils.js'
-import Polygon from './Polygon.js';
-import Vec2 from './Vec2.js';
-import matrix from './libs/matrix-js/lib/index.js'
-import {floorAreaRatio, fitnessFaRatio} from './gaParams.js'
+import Cell from '../cell.js'
+import {geneToColor} from '../utils.js'
+import Polygon from '../Polygon.js';
+import Vec2 from '../Vec2.js';
+import matrix from '../libs/matrix-js'
+import {floorAreaRatio} from '../gaParams.js'
+import {matrixValCount} from '../ga/fitness.js';
+
 export default class Grid{
-    constructor(min, max, size){
+    constructor(min, max, CELL_SIZE){
         this.canvas = document.getElementById('canvas');
         this.ctx = canvas.getContext('2d');
-        this.size = size;
+        this.size = CELL_SIZE;
         this.min = min;
-        this.max = max;   
-        this.cols = Math.floor((max.x - min.x) / size);
-        this.rows = Math.floor((max.y - min.y) / size);
+        this.max = max;
+        this.cols = Math.floor((max.x - min.x) / this.size);
+        this.rows = Math.floor((max.y - min.y) / this.size);
         this.grid = this.to2DArray(this.rows, this.cols );
-        this.validGrid = this.to2DArray(this.rows, this.cols);
-        this.initDisplayGrid(size);
-        this.chromosome = ''
-        this.activeCell = 0;
-        this.foot = this.to2DArray();
+        this.matCellInside = this.to2DArray(this.rows, this.cols);
+        this.initDisplayGrid(this.size);
+        this.matFoot = this.to2DArray();
     }
     to2DArray(){
         let arr = new Array(this.cols);
@@ -66,6 +65,39 @@ export default class Grid{
 
         }
     }
+
+    //todo DNA 클라스에서  gene  생성하는 걸 맞기자.
+    //transform from onStartFootPrint to createDNA
+    createDNA(iter){
+        let dna = new DNA(iter, [this.cols, this.rows])
+        return dna;
+    }
+    //todo seperate from onStartFootPrint to createDNA and drawFootPrint()
+    drawFootPrint(iter){
+        for(let i=0; i<iter; i++){
+            let next = this.nextState(cur)
+        }
+
+    }
+
+    //in this step, chromosome for iter number of code is completed. now we have this.chromosome which is a individual
+    setFootprintMatrixPrint(cur,iter){
+   
+        for (let i = 0; i < iter; i++) {
+            let next = this.nextState(cur);
+            console.log('next[', i,']', this.grid[next.col][next.row]);
+            this.chromosome += ' '+ next.geno;
+            if(next) {
+                this.activeCell+=1;
+                this.displayCell(next.col, next.row, geneToColor(next.geno));
+                cur = next; 
+            }
+            else break;    
+            
+        }
+    }
+
+
     onStartFootPrint(iter){
         //this.initCell(iter);
         let cur = new Cell(Math.floor(this.cols/2), Math.floor(this.rows/2));
@@ -99,19 +131,6 @@ export default class Grid{
         this.ctx.restore();
     }
 
-//    initCell(iter){
-//        let cur = new Cell(Math.floor(this.cols/2), Math.floor(this.rows/2));
-//        if(!cur) return false;
-//        this.activeCell +=1;
-//        this.chromosome += cur.geno;
-//        //cur.occupied = true; //deleted for refactoring
-//        //this.footprint.push([cur.col, cur.row]); //refactor
-//        this.grid[cur.col][cur.row] = cur;
-//        console.log('initial cell', cur)
-//        this.displayCell(cur.col, cur.row, geneToColor(cur.geno));
-//        this.setFootprintMatrixPrint(cur,iter);
-//  //      this.setFootprintMatrixprintTest(cur);
-//    }
 
     nextState(cell){
         let col = +cell.col;
@@ -152,22 +171,6 @@ export default class Grid{
         return next;
     }
 
-    setFootprintMatrixPrint(cur,iter){
-   
-        for (let i = 0; i < iter; i++) {
-            let next = this.nextState(cur);
-            console.log('next[', i,']', this.grid[next.col][next.row]);
-            this.chromosome += ' '+ next.geno;
-            if(next) {
-                this.activeCell+=1;
-                this.displayCell(next.col, next.row, geneToColor(next.geno));
-                cur = next; 
-            }
-            else break;    
-            
-        }
-    }
-
     parcelArea(vertices) {
         let poly = new Polygon(vertices);
         let area = poly.area();
@@ -191,7 +194,7 @@ export default class Grid{
         this.displayValidCell(vertices);
         
         //todo move to costfunction
-        //let validCount = this.el_count(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
+        //let validCount = this.matrixValCount(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
         //let validArea = validCount * this.size*this.size;
         //console.log('validCount', validCount,'validArea', validArea);
         //console.log('floorAreaRatio', floorAreaRatio(area, validArea))
@@ -201,7 +204,7 @@ export default class Grid{
 
 
     setValidGrid(col, row, arrPt, poly) {
-        this.validGrid[col][row] = arrPt.filter(pt => poly.ptInPolygon(pt)).length == 4 ? 1 : 0;
+        this.matCellInside[col][row] = arrPt.filter(pt => poly.ptInPolygon(pt)).length == 4 ? 1 : 0;
     }
 
     cellVertices(loc, size) {
@@ -219,7 +222,7 @@ export default class Grid{
         //             this.displayCell(col, row, 'rgb(20,20,20,0.2');
         //         }
         // }}
-        this.displayCells(this.validGrid, 0, 'rgb(20, 20, 20, 0.2')
+        this.displayCells(this.matCellInside, 0, 'rgb(20, 20, 20, 0.2')
         this.validFootprint(vertices)
     }
     //todo 주어진 1/0 array 에서 1만 출력
@@ -233,8 +236,8 @@ export default class Grid{
             
     }        
 
-    onCreateFloor(){
-        let legalPlane = matrix(this.foot).and(matrix(this.validGrid)) ; 
+    onPreview(){
+        let legalPlane = matrix(this.matFoot).and(matrix(this.matCellInside)) ;
         this.displayCells(legalPlane, 1, 'black');
     }
 
@@ -253,9 +256,9 @@ export default class Grid{
 //    }
 
     validFootprint(vertices){
-        console.log('this.foot', this.foot);
-        console.log('this.validGrid', this.validGrid);
-        let validCount = this.el_count(matrix(this.foot).and(matrix(this.validGrid)), 1) ; 
+        console.log('this.foot', this.matFoot);
+        console.log('this.validGrid', this.matCellInside);
+        let validCount = matrixValCount(matrix(this.matFoot).and(matrix(this.matCellInside)), 1) ;
         let validArea = validCount * this.size*this.size;
         console.log('validArea',  validArea);
         let area2 = this.parcelArea(vertices).area;
@@ -278,25 +281,25 @@ export default class Grid{
 
     setFootprintMatrix(col, row) {
         if (this.grid[col][row] == undefined) {
-            this.foot[col][row] = 0;
+            this.matFoot[col][row] = 0;
         }
         else {
-            this.foot[col][row] = 1;
+            this.matFoot[col][row] = 1;
         }
     }
 
-    el_count(mat, val){
-        let sum = 0;
-        for (let col = 0; col < mat.length; col++) {
-            for (let row = 0; row < mat.length; row++) {
-               const element = mat[col][row];
-               if (element === val){
-                    sum+=1;
-                }
-            }
-        }
-        return sum;
-    }
+//    matrixValCount(mat, val){
+//        let sum = 0;
+//        for (let col = 0; col < mat.length; col++) {
+//            for (let row = 0; row < mat.length; row++) {
+//               const element = mat[col][row];
+//               if (element === val){
+//                    sum+=1;
+//                }
+//            }
+//        }
+//        return sum;
+//    }
     
     onPopulate(){
         console.log('populate');

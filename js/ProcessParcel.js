@@ -7,11 +7,12 @@ import {paint} from './app.js'
 import Grid from './grid2.js';
 import Vec2 from './Vec2.js'
 import { matrixValCount } from './ga/fitness.js'
-import { dnaLength  } from './gaParams.js'
+import {calcDnaLength, params} from './gaParams.js'
 import Polygon from './Polygon.js'
 import Parcel from './Parcel.js'
 import {permitFaRatio} from './global.js';
 import DNA from './ga/dna.js'
+import Footprints from './footprints.js'
 //from menu execution, a instance of parcel is globaly used.
 
 export let parcel;
@@ -55,21 +56,22 @@ export function onFootPrint(){
     if(parcel == undefined) parcel = onParcel();
     if(grid==undefined) grid = onGrid();
     grid.onStartFootPrint();
-    
+
 }
-
-
 export function onValidate() {
     if(parcel == undefined)  parcel = onParcel();
     if(grid == undefined) grid = onGrid();
     if(grid.activeCell == 0) grid.activeCell= onFootPrint();
     grid.onValidateCell(parcel.vertices);
 }
-export function onParcelFootprint(){
+
+
+export function onPreview(){
     if(parcel == undefined) parcel = onParcel();
     if(grid == undefined)  grid = onGrid();
     if(grid.activeCell == 0)  grid.activeCell =onFootPrint();
-    if(matrixValCount(grid.foot, 1) == 0 
+    let parcelFootprintMatrix;
+    if(matrixValCount(grid.foot, 1) == 0
         || matrixValCount(grid.validGrid == 0)){
             grid.onValidateCell(parcel.vertices)
         }
@@ -77,9 +79,10 @@ export function onParcelFootprint(){
         parcel.draw();
     }
     if(grid){
-        grid.onPreview(parcel.vertices)
+        parcelFootprintMatrix= grid.onPreview(parcel.vertices)
     }
 }
+
 export function getParcel(){
     if(parcel){
         return parcel.vertices;
@@ -88,21 +91,43 @@ export function getParcel(){
         return createDefaultParcel().vertices;
     }
 }
-
+    //todo DNA 클라스에서  gene  생성하는 걸 맞기자.
+export function onPopulate_org(){
+    if(parcel == undefined)  parcel = onParcel();
+    if(grid == undefined)  grid = onGrid();
+    let footprints = new Footprints(parcel, grid);
+    gridPopulateFoot()
+}
 export function onPopulate(){
     if(parcel == undefined)  parcel = onParcel();
     if(grid == undefined)  grid = onGrid();
-    grid.onPopulate();
+    let footprisnts = new Footprints();
+    // gridPopulateFoot()
+}
+
+export function gridPopulateFoot(){
+    for(let i=0; i<params.numIndividuals; i++){
+        console.log('i', i );
+        this.onStartFootPrint();
+        this.clearFootPrint()
+    }
+}
+function clearFootPrint(){
 
 }
-    //todo DNA 클라스에서  gene  생성하는 걸 맞기자.
-    //transform from onStartFootPrint to createDNA
+
+
+export function onFootPrintNew(){
+    grid.onStartFootPrint();
+
+}
+//transform from onStartFootPrint to createDNA
 export function  createDNA(){
         if(parcel == undefined){
             parcel = onParcel()
         }
         if(grid== undefined) grid=onGrid();
-        let iter = dnaLength(parcel.area, permitFaRatio);
+        let iter = calcDnaLength(parcel.area, permitFaRatio);
         let dna = new DNA(iter, {cols:grid.cols, rows: grid.rows})
         //forTests
         grid.dnaToFootprintMatrix(dna);

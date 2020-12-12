@@ -13,3 +13,10 @@
 - [ ] convert to pixcel space
 - [ ] convert minimum cell 1m
 - [ ] specify Road line and 2m
+
+# footprint Todo
+- [X] connection of individual id of footprint into DOM
+- [X] parcel information total area:
+- [ ] Preview 
+- [ ] Refresh / Cleanup / Save
+

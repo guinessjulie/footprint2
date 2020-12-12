@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Canvas</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style2.css">
         <script src = './js/libs/canvas2svg.js'></script>
         <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js" integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw==" crossorigin="anonymous"></script> -->
         <!-- <script src="https://unpkg.com/mathjs@8.0.0/"></script> -->
@@ -13,9 +13,10 @@
     <script src="./js/app.js" type='module' defer></script>
 </head>
 <body>
+<main>
     <div class = 'nav-top'>
         <ul>
-            <li class="parcel navitem" data-menu = 'parcel', title='Load New Parcel'>
+            <li class="parcel navitem" data-menu = 'parcel' title='Load New Parcel'>
                 <i class="fas fa-map fa-2x"></i>
             </li>
             <li class ='grid navitem' data-menu = 'create-grid' title='create-grid'>
@@ -36,10 +37,9 @@
             </li>
             <li class = 'About navitem'>
                 <i class="fas fa-text-height fa-2x"></i></li>
-            </li>
             </ul>
         </div>
-    </div>
+
     <div class = 'toolbox left'>
         <div class='group command'>
             <div class='item' data-command='undo' title='undo'>
@@ -123,7 +123,7 @@
         </div>        
     </div>
     <div class='toolbox right'>
-        <div class='group colors'>
+    <div class='group colors'>
             <div class = 'item active' data-color='#ccd'>
                 <div class='swatch' style='background-color: #ccd;'></div>
             </div>
@@ -157,42 +157,117 @@
         </div>
     </div>
     
-       
-    <canvas id = 'canvas' width="630" height="480"></canvas>
-       
-       
-    <canvas id= 'canvas-generation' width="630" height="480"></canvas>
-       
-        <div class='param-container' style="width:640">
-            <div class = 'params'>
-                <button id="play">Evolve</button>
-                <button id="pause">Pause</button>
-                <button id="reset">Clear and Reset</button>
-                <button id="step">Step</button>
-                <button id="config">DEFAULT CONFIG</button>
+    <div class="canvas-container">
+        <canvas id = 'canvas' width="630" height="480"></canvas>
+        <canvas id= 'canvas-generation' width="630" height="480"></canvas>
+    </div>
+    <div  class="info-container">
+        <div id="input-container" class="info-box">
+            <div class="info-head">
+                <h3>Input Parameters</h3>
             </div>
-            <div style="display: inline-block;">
+            <div class="info">
+                <label for="input-faRatio" class="info-label"> Max Floor Area Ratio </label>
                 <div>
-                <span>Step Interval (ms)</span>
-                <input type="range" id="intervalIn" max="500" step="10">
-                <output id="intervalOut"></output>
+                    <input class = "input-option" type="number" id="input-faRatio" value="30"> %
                 </div>
+            </div>
+            <div class="info">
+                <label for="input-cell-size" class="info-label">Cell Size</label>
                 <div>
-                <span>Population Size</span>
-                <input type="range" id="popSizeIn" max="100" step="1">
-                <output id="popSizeOut"></output>
+                    <input type="number" class = "input-option" name="input-cell-size" id="input-cell-size" value="30">px
                 </div>
-                <span>Crossover Chance</span>
-                <input type="range" id="pCrossIn" max="1" step=".01">
-                <output id="pCrossOut"></output>
-                
-                <div>
-                <span>Mutation Chance</span>
-                <input type="range" id="pMutateIn" max="1" step=".01">
-                <output id="pMutateOut"></output>
+            </div>
+            <div class="info">
+                <!-- <label for="checkbox-start-position"> Start Position-->
+                <fieldset>
+                    <legend>Start Position</legend>
+                    <div id="checkbox-start-position">
+                        <input type="checkbox" name="start-position" id="middle" value="middle" checked>
+                        <label for="middle">Middle</label>
+                        <input type="checkbox" name="start-position" id="random">
+                        <label for="random">Random</label>
+                        <input type="checkbox" name="start-position" id="west">
+                        <label for="west">West</label>
+                        <input type="checkbox" name="start-position" id="east">
+                        <label for="east">East</label>
+                        <input type="checkbox" name="start-position" id="south">
+                        <label for="south">South</label>
+                        <input type="checkbox" name="start-position" id="north">
+                        <label for="north">North</label>
+                    </div>
+                <!--</label>-->
+                </fieldset>
+            </div>
+        </div>
+
+        <div id = "param-container" class="info-box" >
+                <div class="info-head">
+                    <h3> Configure GA Parameter </h3>
                 </div>
+            <div class="info param-content" >
+                <label for = "lengthDnaIn">Force DNA Length</label>
+                <div class="force-dna-input">
+                    <input type="checkbox" id="checkbox-dna-size"
+                           name = "force-dna-size" value="on"
+                           class="info-checkbox" checked>
+                    <input class="input-range" type="range" id="lengthDnaIn" max="100" step="1" value="10">
+                </div>
+                <output id="lengthDnaOut">10</output>
+            </div>
+
+            <div class="info param-content" >
+                    <label for = "popSizeIn">Population Size</label>
+                    <input class="input-range" type="range" id="popSizeIn" max="100" step="1" value="1">
+                    <output id="popSizeOut">1</output>
+                </div>
+                <div class="info param-content">
+                    <label for="intervalIn">Step Interval (ms)</label>
+                    <input class="input-range" type="range" id="intervalIn" max="500" step="10" value="100">
+                    <output id="intervalOut" >100</output>
+                </div >
+                <div class="info param-content">
+                    <label for="pCrossIn">Crossover Chance</label>
+                    <input class="input-range" type="range" id="pCrossIn" max="1" step=".01" value="0.5">
+                    <output id="pCrossOut" >0.5</output>
+                </div>
+                <div class="info param-content">
+                    <label for="pMutateIn">Mutation Chance</label>
+                    <input class="input-range" type="range" id="pMutateIn"  max="1" step=".01" value="0.1">
+                    <output id="pMutateOut" >0.1</output>
+                </div>
+        </div>
+        <div id = "status-container" class="info-box">
+            <div class="info-head">
+                <h3> Status Information </h3>
+            </div>
+            <div class="info">
+                <label for="out-generation">Generation : </label>
+                <output id = "out-generation">1</output>
+            </div>
+            <div class="info">
+                <label for="out-individual">Individual ID: </label>
+                <output id = "out-individual">1</output>
+            </div>
+            <div class="info">
+                <label for="out-parcel-area">Parcel Area : </label>
+                <output id="out-parcel-area"></output>
+            </div>
+            <div class="info">
+                <label for="out-faRatio">Floor Area Ratio : </label>
+                <output id = "out-faRatio"></output>
+            </div>
+            <div class="info">
+                <label for="out-boundary-length">Boundary Perimeter : </label>
+                <output id ="out-boundary-length"></output>
+            </div>
+            <div class="info">
+                <label for="out-orientation">Orientation</label>
+                <output id = "out-orientation"></output>
             </div>
         </div>
     </div>
+
+</main>
 </body>
 </html>
