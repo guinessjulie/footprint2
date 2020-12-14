@@ -11,8 +11,8 @@ import {parcel} from './ProcessParcel.js'
 
 //import { getParcel } from './Parcel.js'
 export default class Grid{
-    constructor(min, max, CELL_SIZE){
-        this.canvas = document.getElementById('canvas');
+    constructor(canvasId, min, max, CELL_SIZE){
+        this.canvas = document.getElementById(canvasId);
         this.ctx = canvas.getContext('2d');
         this.size = CELL_SIZE;
         this.min = min;
@@ -25,7 +25,7 @@ export default class Grid{
         //this.validGrid = to2DArray(this.cols, this.rows); //did rename to matCellInside
         this.matCellInside = to2DArray(this.cols, this.rows);
         this.getCellInsideParcel();
-        this.initDisplayGrid(this.size);
+        //this.initDisplayGrid(this.size);
         this.nitro = ''
         this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당 validCellCount로 쓸 수 있을 거 같다. 
         this.foot = to2DArray(this.cols, this.rows);
@@ -63,7 +63,7 @@ export default class Grid{
     }
 
     initDisplayGrid(size, lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
-        
+
         for (let col in [...new Array(this.cols).keys()]){
             for(let row in [...new Array(this.rows).keys()]){
                 this.ctx.save();
@@ -80,9 +80,9 @@ export default class Grid{
                 this.ctx.restore();
                 //this.footprint = []; //refactor
             }
-        }   
+        }
     }
-    
+
 
     toCoords(col, row, size) {
         let loc = { col, row, size };

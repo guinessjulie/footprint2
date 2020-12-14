@@ -5,6 +5,7 @@ import {geneToColor, matrixPerimeter, to2DArray} from './utils.js'
 import matrix from './libs/matrix-js/lib/index.js'
 import {grid, parcel} from "./ProcessParcel.js";
 import {qry} from "./alias.js";
+import {CELL_SIZE} from "./global.js";
 
 export default class Footprint {
 
@@ -62,7 +63,7 @@ export default class Footprint {
         }
         this.checkMatriies() //for debug
         this.displayCells(grid.matCellInside, 0, 'rgb(120,120,160,0.2)');
-
+        grid.initDisplayGrid(CELL_SIZE);
         let validFootprintMatrix = matrix(this.matFootprint).and(matrix(grid.matCellInside));
         this.displayCells(validFootprintMatrix, 1, "black")
         return validFootprintMatrix;

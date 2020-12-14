@@ -1,6 +1,7 @@
 import Vec2 from './Vec2.js'
 import Polygon from './Polygon.js';
 import {qId} from "./alias.js";
+import {CELL_SIZE} from "./global.js";
 export function getCanvasCoords(e, canvas){
     let rect = canvas.getBoundingClientRect();
     let x = ( e.x - rect.left );
@@ -179,4 +180,25 @@ export function drawOnCanvas(canvasId,vertices,clr="rgb(25, 25, 125, 0.2)" ){
     ctx.fill();
     ctx.closePath();
     ctx.stroke();
+}
+
+export function displayCell(canvasId, col, row, min, color='darkgrey'){
+    let canvas = qId(canvasId);
+    let ctx = canvas.getContext("2d");
+    ctx.save();
+    ctx.lineWidth = 1 ;
+    ctx.fillStyle = color;
+    let {x, y, w} = translate(col, row, min);
+    ctx.translate(x, y);
+    ctx.fillRect(0, 0, w, w);
+    ctx.restore();
+}
+
+export function translate(col, row, min){
+    return{
+        x: min.x + col*CELL_SIZE,
+        y: min.y + row* CELL_SIZE,
+        w : CELL_SIZE
+
+    }
 }

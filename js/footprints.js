@@ -34,7 +34,7 @@ export default class Footprints { //todo move footprint class to here and sepera
     }
     optimalFootprint(){
         let opFoot = this.populFoots.pop(); //todo get optimal one. now testing with last one right now
-        let selectedFootprint = new OptimalFootprint(opFoot); //todo
+        let selectedFootprint = new OptimalFootprint(opFoot.validFootprintMatrix); //todo
     }
     populateDNA(numIndividual) {
         let permitFaRatio = qId('input-faRatio').value;

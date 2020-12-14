@@ -43,12 +43,12 @@ export function onParcel(){
     return parcel;
     //todo get polygon from t
 }
-export function onGrid(){
+export function onGrid(canvasId = 'canvas'){
     if(parcel == undefined){
         parcel = onParcel();
     }
     //parcel.grid = new Grid(parcel.bbox.min, parcel.bbox.max, 30)    ;
-    grid = new Grid(parcel.bbox.min, parcel.bbox.max, 30)    ;
+    grid = new Grid(canvasId, parcel.bbox.min, parcel.bbox.max, 30)    ;
     return grid;
 }
 
