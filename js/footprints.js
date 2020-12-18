@@ -4,30 +4,34 @@ import Footprint from "./footprint.js";
 import {grid, parcel} from "./ProcessParcel.js";
 import {qId} from "./alias.js";
 import OptimalFootprint from "./optimalFootprint.js";
+import {delay} from "./utils.js";
 
 export default class Footprints { //todo move footprint class to here and seperates individuals and population
     constructor() {
-        this.generation = 1;
         this.dnas = [];
         this.populFoots = [];
         this.gridSize = {
             cols: grid.arr2d.length,
             rows: grid.arr2d[0].length
         }
-        this.populateDNA(params.numIndividuals)
+        this.populateDNA(params.numIndividuals) //fill array of this.dnas[]
         this.initPopulationFootprint();
         this.displayDomInformation()
         this.optimalFootprint();
     }
 //todo display dom info of footprints generation
     displayDomInformation() {
-        let outGeneration = document.querySelector('#out-generation'); //todo when evolving process started this will be needed don't worry mr. code reviewer
-
+        this.populFoots.forEach( foot => {
+            let outGeneration = document.querySelector('#out-generation'); //todo when evolving process started this will be needed don't worry mr. code reviewer
+            outGeneration.value = foot.id;
+        });
     }
 
     initPopulationFootprint() {
         let id = 0;
+        let footprint;
         for (let indvDna of this.dnas) {
+            grid.clearGrid();
             let footprint = new Footprint(indvDna, id++);
             this.populFoots.push(footprint);
         }

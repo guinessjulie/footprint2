@@ -1,36 +1,54 @@
 //import Cell from './cell.js'
 import Cell from './cell2.js'
-import {geneToColor, to2DArray} from './utils.js'
+import {geneToColor, to2DArray, getContext2d} from './utils.js'
 import Vec2 from './Vec2.js';
 import matrix from './libs/matrix-js/lib/index.js'
 import {calcDnaLength, floorAreaRatio} from './gaParams.js'
-import {permitFaRatio} from './global.js';
+import {CELL_SIZE, permitFaRatio} from './global.js';
 import {matrixValCount} from './ga/fitness.js';
 import DNA from './ga/dna.js'
 import {parcel} from './ProcessParcel.js'
+import {qId} from "./alias.js";
 
-//import { getParcel } from './Parcel.js'
+
 export default class Grid{
-    constructor(canvasId, min, max, CELL_SIZE){
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = canvas.getContext('2d');
-        this.size = CELL_SIZE;
-        this.min = min;
-        this.max = max;   
-        this.cols = Math.floor((max.x - min.x) / this.size);
-        this.rows = Math.floor((max.y - min.y) / this.size);
-        //this.arr2d = this.to2DArray(this.rows, this.cols );
-        //this.validGrid = this.to2DArray(this.rows, this.cols);
-        this.arr2d = to2DArray(this.cols, this.rows );
-        //this.validGrid = to2DArray(this.cols, this.rows); //did rename to matCellInside
-        this.matCellInside = to2DArray(this.cols, this.rows);
-        this.getCellInsideParcel();
-        //this.initDisplayGrid(this.size);
-        this.nitro = ''
-        this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당 validCellCount로 쓸 수 있을 거 같다. 
-        this.foot = to2DArray(this.cols, this.rows);
+    constructor(canvasId, parcel){
+        this.parcel = parcel;
+        this.initializeGrid(canvasId, parcel);
     }
-    //only depends on grid and parcel;
+    constructor_org(canvasId, min, max, CELL_SIZE){
+        this.initializeGrid(canvasId);
+    }
+    initializeGrid(canvasId){
+        this.canvas = qId(canvasId);
+        this.ctx = getContext2d(canvasId)
+        this.setColsRows();
+        this.arr2d = to2DArray(this.cols, this.rows );
+        this.matCellInside = to2DArray(this.cols, this.rows);
+        this.foot = to2DArray(this.cols, this.rows);
+        this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당 validCellCount로 쓸 수 있을 거 같다.
+        this.nitro = ''
+        this.getCellInsideParcel();
+        //Inference:  this.matCellInside checks if the cell is inside the parcel or not.
+        //the object cell that checks is the whole cells in the grid.
+        // and the grid is the boundingbox of the parcel
+        // so the matCellInside only depends on the parcel.
+        // this means whenever new footprint has created, doens't need to change at all.
+        // once it the parcel has created, the this.matCellInside is static.
+        // So then, after footprint has created what should be cleaned up in grid?
+        // to do : 1.displayu
+    }
+    initializeFootprint(){
+        this.arr2d=to2DArray(this.cols, this.rows);
+        this.foot = to2DArray(this.cols, this.rows);
+        this.nitro = '';
+    }
+    setColsRows() {
+        this.cols = Math.floor((this.parcel.bbox.max.x - this.parcel.bbox.min.x) / CELL_SIZE);
+        this.rows = Math.floor((this.parcel.bbox.max.y - this.parcel.bbox.min.y) / CELL_SIZE);
+    }
+
+//only depends on grid and parcel;
     //once set it needs not change regardless the dna
     //setValidGrid(col, row, poly){
 
@@ -58,25 +76,22 @@ export default class Grid{
     }
 
 
-    cleanupGrid(){
 
-    }
-
-    initDisplayGrid(size, lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
+    initDisplayGrid(lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
 
         for (let col in [...new Array(this.cols).keys()]){
             for(let row in [...new Array(this.rows).keys()]){
                 this.ctx.save();
-                let { x, y, w } = this.toCoords(col, row, size);
+                let { x, y, w } = this.toCoords(col, row);
                 this.ctx.translate(x, y);
                 this.ctx.fillStyle = fillStyle;
                 this.ctx.strokeStyle = strokeStyle;
                 this.ctx.fillRect(0, 0, w, w);
                 this.ctx.lineWidth = lineWidth;
                 this.ctx.strokeRect(0, 0, w, w);
-                this.ctx.font = '9px mono';
+                this.ctx.font = '6px mono';
                 let num = col.toString() + ' '+row.toString();
-                this.ctx.strokeText(num, 3, (size/2) );
+                this.ctx.strokeText(num, 3, (CELL_SIZE/2) );
                 this.ctx.restore();
                 //this.footprint = []; //refactor
             }
@@ -84,8 +99,8 @@ export default class Grid{
     }
 
 
-    toCoords(col, row, size) {
-        let loc = { col, row, size };
+    toCoords(col, row) {
+        let loc = { col, row};
         let x = this.translate(loc).x; //this.min.x+col*size;
         let y = this.translate(loc).y; //this.min.y+row*size;
         let w = this.translate(loc).w;
@@ -93,6 +108,13 @@ export default class Grid{
     }
 
     translate(loc){
+        return{
+            x: this.parcel.bbox.min.x + loc.col * CELL_SIZE,
+            y: this.parcel.bbox.min.y + loc.row * CELL_SIZE,
+            w: CELL_SIZE -3
+        }
+    }
+    translate_org(loc){
         return{
             x: this.min.x + loc.col*this.size,
             y: this.min.y + loc.row* this.size,
@@ -209,7 +231,7 @@ export default class Grid{
     }
     displayCell(col, row, color='black'){
         this.ctx.save();
-        let size = this.size
+        let size = CELL_SIZE;
         this.ctx.lineWidth = 1 ;
         this.ctx.fillStyle = color;
         let loc = {col, row, size}
@@ -221,7 +243,9 @@ export default class Grid{
         this.ctx.restore();
     }
 
-
+    clearGrid(){
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
     nextState(cell, iter, dna){
         let col = +cell.col;
         let row = +cell.row;
@@ -262,7 +286,6 @@ export default class Grid{
     }
     //menu > validate >
     onValidateCell(vertices){
-        let size = this.size;
         let {area, poly} = this.parcelArea(vertices);
         console.log('polygon area :',  area)
         for(let row in [...new Array(this.rows).keys()]){
@@ -294,9 +317,9 @@ export default class Grid{
 
     getCellCorners(loc) {
         let pt1 = new Vec2(this.translate(loc).x, this.translate(loc).y);
-        let pt2 = new Vec2(this.translate(loc).x, this.translate(loc).y + this.size);
-        let pt3 = new Vec2(this.translate(loc).x + this.size, this.translate(loc).y + this.size);
-        let pt4 = new Vec2(this.translate(loc).x + this.size, this.translate(loc).y);
+        let pt2 = new Vec2(this.translate(loc).x, this.translate(loc).y + CELL_SIZE);
+        let pt3 = new Vec2(this.translate(loc).x + CELL_SIZE, this.translate(loc).y + CELL_SIZE);
+        let pt4 = new Vec2(this.translate(loc).x + CELL_SIZE, this.translate(loc).y);
         return [ pt1, pt2, pt3, pt4 ];
     }
 
@@ -345,7 +368,7 @@ export default class Grid{
         console.log('this.foot', this.matFoot);
         console.log('this.validGrid', this.matCellInside);
         let validCount = matrixValCount(matrix(this.matFoot).and(matrix(this.matCellInside)), 1) ;
-        let validArea = validCount * this.size*this.size;
+        let validArea = validCount * CELL_SIZE*CELL_SIZE;
         console.log('validArea',  validArea);
         let area = this.parcelArea(vertices).area;
         //let area = this.parcelArea(vertices).area;

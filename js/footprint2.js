@@ -6,6 +6,7 @@ import matrix from './libs/matrix-js/lib/index.js'
 import {grid, parcel} from "./ProcessParcel.js";
 import {qry} from "./alias.js";
 import {CELL_SIZE} from "./global.js";
+//original
 
 export default class Footprint {
 
@@ -33,8 +34,6 @@ export default class Footprint {
         outFaRatio.value = this.fitness.faRatio + "%";
         outBoundaryLength.value = this.fitness.boundaryLength;
         outParcelArea.value = parcel.area;
-
-
     }
 
 

@@ -1,6 +1,5 @@
 import BoundingBox2D from './boundingBox2D.js'
-import {toBBox, toGrid } from './utils.js'
-import {domRectToPolygon} from './utils.js'
+import {toBBox, toGrid, getContext2d, domRectToPolygon } from './utils.js'
 import Rect from './Rect.js'
 import {paint} from './app.js'
 //import Grid from './grid.js';
@@ -47,14 +46,14 @@ export function onGrid(canvasId = 'canvas'){
     if(parcel == undefined){
         parcel = onParcel();
     }
-    //parcel.grid = new Grid(parcel.bbox.min, parcel.bbox.max, 30)    ;
-    grid = new Grid(canvasId, parcel.bbox.min, parcel.bbox.max, 30)    ;
+    //grid = new Grid(canvasId, parcel.bbox.min, parcel.bbox.max, 30)    ;
+    grid = new Grid(canvasId,parcel);
     return grid;
 }
 
 export function onFootPrint(){
     if(parcel == undefined) parcel = onParcel();
-    if(grid==undefined) grid = onGrid();
+    if(grid==undefined) grid = onGrid(canvasId='canvas', parcel);
     grid.onStartFootPrint();
 
 }
@@ -100,7 +99,7 @@ export function onPopulate_org(){
 }
 export function onPopulate(){
     if(parcel == undefined)  parcel = onParcel();
-    if(grid == undefined)  grid = onGrid();
+    if(grid == undefined)  grid = onGrid('canvas');
     let footprisnts = new Footprints();
     // gridPopulateFoot()
 }

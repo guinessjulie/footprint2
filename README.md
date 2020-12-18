@@ -22,9 +22,14 @@
 
 #OptimalFootprint Problem
 - [x] Draw Parcel in a new canvas called canvas-generation
-- [ ] grid has i's own canvas of left side
-- [ ] however OptimalFootprint tried to draw footprint with grid.displayCells
-- [ ] To solve this problem, change grid class to optinally select canvas
-- [ ] or duplicate grid on OptimalFootprint
+- [X] replicate of 2nd Canvas
+- [X] grid.displayCells in OptimalFootprint moves to utils.js 
+     - [ ] todo : need to refactor in grid2.js
+- [X] To solve this problem, some functions are duplicate grid on OptimalFootprint
+    - [ ] todo :Refactor grid2.js
+  
+## To Do 12-14
+- [ ] Let's evolve
+  - [ ] make population of 10 and evaluate it's fitness functions
 
 

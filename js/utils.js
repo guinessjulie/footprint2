@@ -27,6 +27,19 @@ export function rectToPolygon(rect){
     polygon.addVer(new Vec2(rect.x))
 }
 
+export function delay(gap){ /* gap is in millisecs */
+
+    let then,now;
+    then=new Date().getTime();
+    now=then;
+    while((now-then)<gap){
+        now=new Date().getTime();  // 현재시간을 읽어 함수를 불러들인 시간과의 차를 이용하여 처리
+    }
+}
+
+
+
+//출처: https://blog.opid.kr/116 [opid's document]
 //Usage:
 
 // array of coordinates of each vertex of the polygon
@@ -182,9 +195,14 @@ export function drawOnCanvas(canvasId,vertices,clr="rgb(25, 25, 125, 0.2)" ){
     ctx.stroke();
 }
 
-export function displayCell(canvasId, col, row, min, color='darkgrey'){
+export function getContext2d(canvasId) {
     let canvas = qId(canvasId);
     let ctx = canvas.getContext("2d");
+    return ctx;
+}
+
+export function displayCell(canvasId, col, row, min, color='darkgrey'){
+    let ctx = getContext2d(canvasId);
     ctx.save();
     ctx.lineWidth = 1 ;
     ctx.fillStyle = color;
@@ -194,11 +212,16 @@ export function displayCell(canvasId, col, row, min, color='darkgrey'){
     ctx.restore();
 }
 
-export function translate(col, row, min){
+export function translate   (col, row, min){
     return{
         x: min.x + col*CELL_SIZE,
         y: min.y + row* CELL_SIZE,
         w : CELL_SIZE
 
     }
+}
+
+export function cleanupGrid(canvasId){
+    let ctx = getContext2d(canvasId);
+
 }

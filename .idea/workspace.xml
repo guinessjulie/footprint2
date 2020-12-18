@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="afb66847-8079-41f3-a7dd-acb76433eaf8" name="Default Changelist" comment="OptimizedFootprint draw parcel and footprint">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/footprint2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/footprint.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/footprint.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/ProcessParcel.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ProcessParcel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/footprint.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/footprint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/footprints.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/footprints.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/grid2.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/grid2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/optimalFootprint.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/optimalFootprint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/utils.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/js/ProcessParcel.js" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/docs/footprint.md" root0="SKIP_INSPECTION" root1="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectId" id="1l8PMLmayhAaFTlB6GxGyPWmIq5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="GitIgnore" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/js" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.splitter.proportion" value="0.24106231" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu-20.04\home\joo\production\footprint\js" />
+      <recent name="\\wsl$\Ubuntu-20.04\home\joo\production\footprint" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="\\wsl$\Ubuntu-20.04\home\joo\production\footprint\js\removed" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="footprint" type="NodeJSConfigurationType" path-to-node="wsl://Ubuntu-20.04@/home/joo/.nvm/versions/node/v14.10.0/bin/node" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="wsl://Ubuntu-20.04@/home/joo/.nvm/versions/node/v14.10.0/bin/node" />
+      <package-manager value="\\wsl$\Ubuntu-20.04\home\joo\production\footprint" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.footprint" />
+      <item itemvalue="npm.dev" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="afb66847-8079-41f3-a7dd-acb76433eaf8" name="Default Changelist" comment="" />
+      <created>1606975696951</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1606975696951</updated>
+      <workItem from="1606975700019" duration="7325000" />
+      <workItem from="1607144708850" duration="27695000" />
+      <workItem from="1607311749553" duration="96601000" />
+      <workItem from="1607915343473" duration="21642000" />
+      <workItem from="1608265474419" duration="486000" />
+    </task>
+    <task id="LOCAL-00001" summary="footprint and it's parameter working &#10;complete faRatio and perimeter algorithm">
+      <created>1607761477378</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1607761477378</updated>
+    </task>
+    <task id="LOCAL-00002" summary="OptimalFootprint class created&#10;now new canvas right, draws parcel.&#10;however it does not draw footprint">
+      <created>1607768049928</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1607768049928</updated>
+    </task>
+    <task id="LOCAL-00003" summary="OptimizedFootprint draw parcel and footprint">
+      <created>1607918802061</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1607918802061</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="footprint and it's parameter working &#10;complete faRatio and perimeter algorithm" />
+    <MESSAGE value="OptimalFootprint class created&#10;now new canvas right, draws parcel.&#10;however it does not draw footprint" />
+    <MESSAGE value="OptimizedFootprint draw parcel and footprint" />
+    <option name="LAST_COMMIT_MESSAGE" value="OptimizedFootprint draw parcel and footprint" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/js/Parcel.js</url>
+          <line>23</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

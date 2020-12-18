@@ -9,13 +9,18 @@ let footprints = new Footprints(parcel, grid);
 ### Footprints constructor (parcel, grid)
 ```javascript
 this.dnas = [];
-this.populateDNA(params.numIndividuals) //... 0 
-this.population = [];
-this.initPopulationFootprint() //....1
+this.populFoots = [];
+this.gridSize = {
+    cols: grid.arr2d.length,
+    rows: grid.arr2d[0].length
+}
+this.populateDNA(params.numIndividuals) //.....0
+this.initPopulationFootprint(); //.....1
 this.displayDomInformation()
+this.optimalFootprint();
 
 ```
-- ### 0. populateDNA(param.numIndividuals) in footprints.js
+### 0. populateDNA(param.numIndividuals) in footprints.js
 ```javascript
 populateDNA(numIndividual) //
 {
@@ -26,6 +31,9 @@ populateDNA(numIndividual) //
 }
 ```
 ### 1. initPopulationFootprint()
+- create footprint for each individuals
+-   fill this.populFoots array with this footprint created for each individuals 
+
 ```javascript
  initPopulationFootprint(){
     for (let indvDna of this.dnas){
@@ -34,17 +42,30 @@ populateDNA(numIndividual) //
   }
 }
 ```
-### 2. let footprint = new Footprint(parcel, grid)    
-```javascript 
-constructor(){
-    this.dna= dna;
-    this.activeCell=0;
-    grid.cleanupGrid();
-    this.indivFoot =this.buildFootprint(); //...3
-    this.matFootprint = to2DArray(grid.cols, gird.rows); //...3 
-}            
-```
+### 2. let footprint = new Footprint(parcel, grid)
+- each footprint has own fitness values (area, faRatio, boundary Length etc)
+- each footprint has matFootprint matrix
+- each footprint has this.validFootprintMatrix from the buildFootprint() function call result
 
+```javascript 
+    constructor(dna, id) {
+        this.dna = dna;
+        this.id = id;
+        this.activeCell = 0;
+        this.fitness = {
+            area: 0,
+            faRatio: 0,
+            boundaryLength : 0
+        }
+        //grid.cleanupGrid();
+        this.matFootprint = to2DArray(grid.cols, grid.rows); //...3
+        this.validFootprintMatrix = this.buildFootprint(); //...3
+        this.calculateFitness();
+        this.displayDomInfo();
+        this.displayPreview();
+}       
+     
+```
 ###3. buildFootprint() //build FootprintMatrix
 ```javascript
 //...call nextCellActive (fill active cell on grid.arr2d)
