@@ -14,6 +14,10 @@ export function getCanvasCoords(e, canvas){
 //             y : x - rect.top
 //         }
 // }
+
+export function randInt(max){ //from 0 to max
+    return Math.floor(Math.random()*max)
+}
 export function domRectToPolygon(domRect){
     let polygon = new Polygon();
     polygon.addVer(new Vec2(domRect.left, domRect.top));
@@ -48,7 +52,6 @@ export function delay(gap){ /* gap is in millisecs */
 
 export function toBBox(vertices){
     let bbox = {}
-    console.log(vertices)
     let minX = vertices.reduce((a, b)=> Math.min(a, b.x), Number.MAX_SAFE_INTEGER)        
     let maxX= vertices.reduce((a, b)=> Math.max(a, b.x), Number.MIN_SAFE_INTEGER)
     let minY= vertices.reduce((a, b)=> Math.min(a, b.y), Number.MAX_SAFE_INTEGER)        

@@ -6,7 +6,7 @@ import matrix from './libs/matrix-js/lib/index.js'
 import {calcDnaLength, floorAreaRatio} from './gaParams.js'
 import {CELL_SIZE, permitFaRatio} from './global.js';
 import {matrixValCount} from './ga/fitness.js';
-import DNA from './ga/dna.js'
+import Gene from './ga/dna.js'
 import {parcel} from './ProcessParcel.js'
 import {qId} from "./alias.js";
 
@@ -16,16 +16,13 @@ export default class Grid{
         this.parcel = parcel;
         this.initializeGrid(canvasId, parcel);
     }
-    constructor_org(canvasId, min, max, CELL_SIZE){
-        this.initializeGrid(canvasId);
-    }
+
     initializeGrid(canvasId){
         this.canvas = qId(canvasId);
         this.ctx = getContext2d(canvasId)
         this.setColsRows();
         this.arr2d = to2DArray(this.cols, this.rows );
         this.matCellInside = to2DArray(this.cols, this.rows);
-        this.foot = to2DArray(this.cols, this.rows);
         this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당 validCellCount로 쓸 수 있을 거 같다.
         this.nitro = ''
         this.getCellInsideParcel();
@@ -40,7 +37,6 @@ export default class Grid{
     }
     initializeFootprint(){
         this.arr2d=to2DArray(this.cols, this.rows);
-        this.foot = to2DArray(this.cols, this.rows);
         this.nitro = '';
     }
     setColsRows() {
@@ -66,18 +62,11 @@ export default class Grid{
         let loc = {col, row};
         let arrPt = this.getCellCorners(loc);
         this.matCellInside[col][row] = arrPt.filter(pt => parcel.poly.ptInPolygon(pt)).length == 4 ? 1 : 0;
-        /* for validFootprint
-        if (this.arr2d[col][row] == undefined) {
-            this.matFoot[col][row] = 0;
-        }
-        else {
-            this.matFoot[col][row] = 1;
-        }*/
     }
 
 
 
-    initDisplayGrid(lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
+    initCanvasGrid(lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
 
         for (let col in [...new Array(this.cols).keys()]){
             for(let row in [...new Array(this.rows).keys()]){
@@ -106,8 +95,15 @@ export default class Grid{
         let w = this.translate(loc).w;
         return { x, y, w };
     }
-
     translate(loc){
+        return{
+            x: this.parcel.bbox.min.x + (loc.col * CELL_SIZE),
+            y: this.parcel.bbox.min.y + (loc.row * CELL_SIZE),
+            w: CELL_SIZE -3
+        }
+    }
+
+    translate_org2(loc){
         return{
             x: this.parcel.bbox.min.x + loc.col * CELL_SIZE,
             y: this.parcel.bbox.min.y + loc.row * CELL_SIZE,
@@ -199,8 +195,8 @@ export default class Grid{
         }
     }
 
-    createDNA(dnaLen){
-        let dna = new DNA(dnaLen, [this.arr2d.col], [this.arr2d.row]);
+    createDNA(geneLen){
+        let dna = new Gene(geneLen, [this.arr2d.col], [this.arr2d.row]);
         return dna;
     }
     onStartFootPrint(){
@@ -210,8 +206,8 @@ export default class Grid{
         //let col = this.arr2d.col;
         //let row = this.arr2d.row;
         //let dna = new DNA(dnaSize, [col, row])
-        let dnaLen = calcDnaLength(parcel.area, permitFaRatio);
-        let dna = this.createDNA(dnaLen);
+        let geneLen = calcDnaLength(parcel.area, permitFaRatio);
+        let dna = this.createDNA(geneLen);
         let cur = new Cell(Math.floor(this.cols/2), Math.floor(this.rows/2), dna.gene[0]);
         if(!cur) return false;
         this.activeCell +=1;
@@ -221,7 +217,7 @@ export default class Grid{
         this.arr2d[cur.col][cur.row] = cur;
         console.log('initial cell', cur)
         this.displayCell(cur.col, cur.row, geneToColor(cur.nitrobasis));
-        this.setFootprintMatrixPrint(cur,dnaLen, dna);
+        this.setFootprintMatrixPrint(cur,geneLen, dna);
     }
     displayGrid(col, row, color){
         this.ctx.fillStyle = color;
@@ -243,9 +239,24 @@ export default class Grid{
         this.ctx.restore();
     }
 
+    displayCells(arr, id=1, color='red' ){
+        for (let col in [...new Array(this.cols).keys()]){
+            for(let row in [...new Array(this.rows).keys()]){
+                if(arr[col][row] === id){
+                    this.displayCell(col, row, color);
+                }
+            }}
+    }
+    animate(){
+        requestAnimationFrame(animate);
+        
+    }
+
     clearGrid(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
+
+    
     nextState(cell, iter, dna){
         let col = +cell.col;
         let row = +cell.row;

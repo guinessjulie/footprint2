@@ -12,6 +12,7 @@ import Parcel from './Parcel.js'
 import {permitFaRatio} from './global.js';
 import DNA from './ga/dna.js'
 import Footprints from './footprints.js'
+import {animationId }from './footprints.js'
 //from menu execution, a instance of parcel is globaly used.
 
 export let parcel;
@@ -100,10 +101,12 @@ export function onPopulate_org(){
 export function onPopulate(){
     if(parcel == undefined)  parcel = onParcel();
     if(grid == undefined)  grid = onGrid('canvas');
-    let footprisnts = new Footprints();
+    let footprints = new Footprints();
     // gridPopulateFoot()
 }
-
+export function onStopEvolve(){
+    cancelAnimationFrame(animationId);
+}
 export function gridPopulateFoot(){
     for(let i=0; i<params.numIndividuals; i++){
         console.log('i', i );

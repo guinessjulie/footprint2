@@ -74,5 +74,30 @@ export default class Polygon{
       }
       return inside;
   }
-  
+ 
+ptInPolygon_trynew(point) {
+  let n = this.vertices.length;
+  let p = this.vertices[n - 1];
+  let x = point.x;
+  let y = point.y;
+  let x0 = p.x;
+  let y0 = p.y;
+  let x1 ;
+  let y1;
+  let inside = false;
+
+  for (var i = 0; i < n; ++i) {
+    p = this.vertices[i], x1 = p.x, y1 = p.y;
+    if (
+        ((y1 >= y) !== (y0 >= y)) && 
+        (x <= (x0 - x1) * (y - y1) / (y0 - y1) + x1)) {
+      inside = !inside;
+    }
+    x0 = x1, y0 = y1;
+  }
+  return inside;
+} 
 }
+
+
+

@@ -1,6 +1,7 @@
 import {TOOL_BRUSH, TOOL_BUCKET, TOOL_CIRCLE, TOOL_LINE, TOOL_PEN, TOOL_POLYGON, TOOL_RECT, TOOL_TRI} from './Tools.js'
 import Paint from './Paint.js'
 import {addGAParamEventHandle, registerFootPrintHandle} from './handleDomElements.js'
+import { qAll, qAllClick } from './alias.js';
 
 Node.prototype.on = Node.prototype.addEventListener;
 export const paint = new Paint("canvas")
@@ -10,18 +11,27 @@ paint.activeTool = TOOL_PEN;
 
 let canvas = document.getElementById('canvas')
 let parcel ;
-document.querySelectorAll('[data-command]').forEach(
-    el =>{
-        el.addEventListener('click', e=>{
-            console.log(el.getAttribute('data-command'));
-        })
-    }
-);
+// document.querySelectorAll('[data-command]').forEach(
+//     el =>{
+//         el.addEventListener('click', e=>{
+//             console.log(el.getAttribute('data-command'));
+//         })
+//     }
+// );
+// qAll('[data-command]').forEach(el=>{
+//     el =>{
+//         el.addEventListener('click', e=>{
+//             console.log(el.getAttribute('data-command'));
+//         })
+//     }
+// })
 
-document.querySelectorAll('[data-tool]').forEach(
+
+
+qAll('[data-tool]').forEach(
     el=>{
         el.addEventListener('click', e=>{
-            document.querySelector('[data-tool].active').classList.toggle('active');
+            qry('[data-tool].active').classList.toggle('active');
             el.classList.toggle('active');
             const selected = el.getAttribute('data-tool');
             paint.activeTool = selected;
@@ -32,29 +42,29 @@ document.querySelectorAll('[data-tool]').forEach(
                 case TOOL_CIRCLE :
                 case TOOL_TRI :                    
                 case TOOL_POLYGON :
-                    document.querySelector('.group.pen').style.display = 'block';
-                    document.querySelector('.group.brush').style.display = 'none';
+                    qry('.group.pen').style.display = 'block';
+                    qry('.group.brush').style.display = 'none';
                     break;
                 case TOOL_BRUSH :
-                    document.querySelector('.group.pen').style.display = 'none';
-                    document.querySelector('.group.brush').style.display = 'block';
+                    qry('.group.pen').style.display = 'none';
+                    qry('.group.brush').style.display = 'block';
                     break;
                 case TOOL_BUCKET:
                     console.log('bucket selected in the app')
                     break;
                 default  : 
-                    document.querySelector('.group.pen').style.display = 'none';
-                    document.querySelector('.group.brush').style.display = 'none';
+                    qry('.group.pen').style.display = 'none';
+                    qry('.group.brush').style.display = 'none';
                 break;
             }
         })    
     }
 );
 
-document.querySelectorAll('[data-line-width]').forEach(
+qAll('[data-line-width]').forEach(
     el=>{
         el.addEventListener('click', e=>{
-            document.querySelector('[data-line-width].active').classList.toggle('active');
+            qry('[data-line-width].active').classList.toggle('active');
             el.classList.toggle('active');            
             let linewidth = el.getAttribute('data-line-width');
             paint.lineWidth =  linewidth;
@@ -63,10 +73,10 @@ document.querySelectorAll('[data-line-width]').forEach(
     }
 );
 
-document.querySelectorAll('[data-brush-size]').forEach(
+qAll('[data-brush-size]').forEach(
     el=>{
         el.addEventListener('click', e=>{
-            document.querySelector('[data-brush-size].active').classList.toggle('active');
+            qry('[data-brush-size].active').classList.toggle('active');
             el.classList.toggle('active');
             let brushsize = el.getAttribute('data-brush-size');
             console.log('from html brushsize:',  brushsize );
@@ -75,10 +85,10 @@ document.querySelectorAll('[data-brush-size]').forEach(
     }
 );
 
-document.querySelectorAll('[data-color]').forEach(
+qAll('[data-color]').forEach(
     el=>{
         el.addEventListener('click',e=>{
-            document.querySelector('[data-color].active').classList.toggle('active');
+            qry('[data-color].active').classList.toggle('active');
             el.classList.toggle("active");
             let color = el.getAttribute('data-color');
             paint.selectColor = color;

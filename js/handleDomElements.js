@@ -1,5 +1,5 @@
 import {qry, qId} from './alias.js';
-import {onParcel, onGrid, onFootPrint, onValidate, onPreview, onPopulate}  from './ProcessParcel.js';
+import {onParcel, onGrid, onFootPrint, onValidate, onPreview, onPopulate, onStopEvolve}  from './ProcessParcel.js';
 import * as gaParams from "./gaParams.js";
 export function registerFootPrintHandle(){
     qry('.parcel').on('click',onParcel);
@@ -8,6 +8,7 @@ export function registerFootPrintHandle(){
     qry('.footprint').on('click', onFootPrint)
     qry('.parcel-footprint').on('click', onPreview)
     qry('.populate').on('click', onPopulate)
+    qry('.stop').on('click', onStopEvolve);
 }
 
 export function addGAParamEventHandle(){

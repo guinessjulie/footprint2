@@ -9,18 +9,18 @@ import {CELL_SIZE} from "./global.js";
 
 export default class Footprint {
 
-    constructor(dna, id) {
-        this.dna = dna;
+    constructor(gene, id) {
+        this.gene = gene;
         this.id = id;
         this.activeCell = 0;
-        this.fitness = {
+        this.attr = {
             area: 0,
             faRatio: 0,
             boundaryLength : 0
         }
         this.matFootprint = to2DArray(grid.cols, grid.rows);
         this.validFootprintMatrix = this.buildFootprint();
-        this.calculateFitness();
+        this.calcLandAttributes();
         this.displayDomInfo();
     //    this.displayPreview(); //todo handle later
     }
@@ -30,11 +30,9 @@ export default class Footprint {
         let outBoundaryLength = document.querySelector('#out-boundary-length');
         let outParcelArea = qry('#out-parcel-area');
         outIndividual.value = this.id;
-        outFaRatio.value = this.fitness.faRatio + "%";
-        outBoundaryLength.value = this.fitness.boundaryLength;
+        outFaRatio.value = this.attr.faRatio + "%";
+        outBoundaryLength.value = this.attr.boundaryLength;
         outParcelArea.value = parcel.area;
-
-
     }
 
 
@@ -51,15 +49,14 @@ export default class Footprint {
     // and  canvas also cleared
     // this.checkMatriies() //for debug
     buildFootprint() {
-        this.initNewFootprint()
-        let cur = new Cell(Math.floor(grid.cols / 2), Math.floor(grid.rows / 2));
+        this.initNewFootprint() //initialize grid.arr2d foot nitro 
+        let cur = new Cell(Math.floor(grid.cols / 2), Math.floor(grid.rows / 2), this.gene.dna[0]);//temp doing
+        //let cur = new Cell(1,1, this.dna.gene[0]);//temp doing
         if (cur === undefined) return false;
         this.activeCell += 1;
         //let curnitro = cur.nitrobasis;
         grid.arr2d[cur.col][cur.row] = cur; //active grid cell에 cell 정보 할당.
-        grid.clearGrid();
-        //grid.displayCell(cur.col, cur.row, geneToColor(cur.nitrobasis)); //todo  whattodo displayCell 을 따로 빼? remove
-        for (let i = 0; i < this.dna.dnaLen; i++) { //setFootprintMatrixPrint from grid2.js
+        for (let i = 0; i < this.gene.genLen; i++) { //setFootprintMatrixPrint from grid2.js
             let next = this.setNextCellActive(cur, i);
             if (next) {
                 this.activeCell += 1;
@@ -76,21 +73,23 @@ export default class Footprint {
                 }
             }
         }
-        this.displayCells(grid.matCellInside, 0, 'rgb(120,120,160,0.2)');
-        grid.initDisplayGrid();
         let validFootprintMatrix = matrix(this.matFootprint).and(matrix(grid.matCellInside));
-        this.displayCells(validFootprintMatrix, 1, "black")
         return validFootprintMatrix;
     }
-    calculateFitness(){
+    displayFoot(validFootprintMatrix){
+        grid.displayCells(grid.matCellInside, 1, "white");
+        grid.displayCells(validFootprintMatrix, 1, "black")//doing
+    }
+    calcLandAttributes(){
         let validCellCount = matrixValCount(matrix(this.matFootprint).and(matrix(grid.matCellInside)), 1) ;
-        this.fitness.area = validCellCount * CELL_SIZE * CELL_SIZE;
-        this.fitness.faRatio = Math.round((floorAreaRatio(parcel.area, this.fitness.area) + Number.EPSILON)* 10000)/100;
-        this.fitness.boundaryLength = matrixPerimeter(this.validFootprintMatrix) * 30;
+        this.attr.area = validCellCount * CELL_SIZE * CELL_SIZE;
+        this.attr.faRatio = Math.round((floorAreaRatio(parcel.area, this.attr.area) + Number.EPSILON)* 10000)/100;
+        this.attr.boundaryLength = matrixPerimeter(this.validFootprintMatrix) * CELL_SIZE;
     }
 
 
     //todo 주어진 1/0 array 에서 1만 출력
+    //doing move to grid class for accessing from footprints and footprint both
     displayCells(arr, id=1, color='red'){
         for (let col in [...new Array(grid.cols).keys()]){
             for(let row in [...new Array(grid.rows).keys()]){
@@ -101,21 +100,15 @@ export default class Footprint {
 
     }
 
-    checkMatriies(){
-        console.log('matFootprint', this.matFootprint);
-        console.log('matCellInside', grid.matCellInside);
-    }
-
-    //decide next cell and fill the ogject in [col, row] the grid
     setNextCellActive(cell, iter) {
         let col = +cell.col;
         let row = +cell.row;
-        let next;
-        const arr2d = (col, row) => grid.arr2d[col][row];
+        const arr2d = (col, row) => grid.arr2d[col][row]
         switch (cell.nitrobasis) {
             case '00' : //East
-                col = col === this.cols - 1 ? col : col + 1;
-                while (arr2d(col, row) && col < this.cols - 1) {
+                //col = col === this.cols - 1 ? col : col + 1; //doing : when col is right-most, stay in there
+                col = col === grid.cols - 1 ? col : col+1;
+                while (arr2d(col, row) && col < grid.cols - 1) { //if grid.arr2d[col][row] aleady exists and not hit the wall, go to one cell more east direction
                     col += 1;
                 }
                 break;
@@ -126,8 +119,8 @@ export default class Footprint {
                 }
                 break;
             case '01' : //South
-                row = row === this.rows - 1 ? row : row + 1;
-                while (arr2d(col, row) && row < this.rows - 1) {
+                row = row !== grid.rows -1 ? row : row + 1; // goto 1 step South if not wall 
+                while (arr2d(col, row) && row < grid.rows - 1) {
                     row += 1;
                 }
                 break;
@@ -141,11 +134,86 @@ export default class Footprint {
                 break;
         }
 
-        next = new Cell(col, row, this.dna.gene[iter + 1]);
+        let next = new Cell(col, row, this.gene.dna[iter + 1]);
         grid.arr2d[col][row] = next;
         return next;
     }
 
+    // setNextCellActive_save(cell, iter) {
+    //     let col = +cell.col;
+    //     let row = +cell.row;
+    //     const arr2d = (col, row) => grid.arr2d[col][row]
+    //     const findEmptyCell = (cell) =>{
+    //         switch(cell.nitrobasis){
+    //             case '00': //-->when it hits East side, put it in the West side.
+    //                 do {
+    //                     col = col -1;
+    //                 } while(grid.arr2d[col][row])
+    //                 break;
+    //             case '10': //<--West it hits West side, put it in the East side.
+    //                 do{
+    //                     col = col + 1;
+    //                 } while(grid.arr2d[col][row])
+    //                 break;
+    //             case '11' : // when hit up wall, put it i the lower side
+    //                 do {
+    //                     row = row -1;
+    //                 } while(grid.arr2d[col][row]) //until no array is exists
+    //                 break;
+    //             case '01': //south when it hits south wall go up until it meets empty cell
+    //                 do { 
+    //                     row = row + 1;
+    //                 } while(grid.arr2d[col][row])
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //         return col;
+    //     }
+    //     switch (cell.nitrobasis) {
+    //         case '00' : //East
+    //             //col = col === this.cols - 1 ? col : col + 1; //doing : when col is right-most, stay in there
+    //             if(col === grid.cols -1){
+    //                 findEmptyCell(cell) //if it is not the last column stay there, otherwise findEmptyCell
+    //             } else{
+    //                 col = col === grid.cols - 1 ? col : col+1;
+    //                 while (arr2d(col, row) && col < grid.cols - 1) { //if grid.arr2d[col][row] aleady exists and not hit the wall, go to one cell more east direction
+    //                     col += 1;
+    //                 }
+    //             }
+    //             break;
+    //         case '10' : //West
+    //             if(col === 0) {
+    //                 findEmptyCell(cell)
+    //             }else{
+    //                 col = col === 0 ? col : col - 1;
+    //                 while (arr2d(col, row) && col > 0) {
+    //                     col -= 1;
+    //                 }
+    //             }
+    //             break;
+    //         case '01' : //South
+    //             row = row !== grid.rows -1 ? row : row + 1; // goto 1 step South if not wall 
+    //             while (arr2d(col, row) && row < grid.rows - 1) {
+    //                 row += 1;
+    //             }
+    //             row = row !== grid.rows ? row : findEmptyCell(cell)
+    //             break;
+    //         case '11' : //North
+    //             row = row === 0 ? row : row - 1;
+    //             while (arr2d(col, row) && row > 0) {
+    //                 row -= 1;
+    //             }
+    //             row = row !== 0 ? row : findEmptyCell(cell);
+    //             break;
+    //         default:
+    //             break;
+    //     }
+
+    //     let next = new Cell(col, row, this.dna.gene[iter + 1]);
+    //     grid.arr2d[col][row] = next;
+    //     return next;
+    // }
 
     // parallelbuildFootPrint() {
     //     for (const dna of this.dnas) {

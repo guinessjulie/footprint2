@@ -37,6 +37,9 @@
             </li>
             <li class = 'About navitem'>
                 <i class="fas fa-text-height fa-2x"></i></li>
+            <li class='stop navitem'>
+                <i class="fas fa-stop fa-2x"></i>
+            </li>
             </ul>
         </div>
 
@@ -158,8 +161,8 @@
     </div>
     
     <div class="canvas-container">
-        <canvas id = 'canvas' width="630" height="480"></canvas>
         <canvas id= 'canvas-generation' width="630" height="480"></canvas>
+        <canvas id = 'canvas' width="630" height="480"></canvas>
     </div>
     <div  class="info-container">
         <div id="input-container" class="info-box">
@@ -211,15 +214,15 @@
                     <input type="checkbox" id="checkbox-dna-size"
                            name = "force-dna-size" value="on"
                            class="info-checkbox" checked>
-                    <input class="input-range" type="range" id="lengthDnaIn" max="100" step="1" value="10">
+                    <input class="input-range" type="range" id="lengthDnaIn" max="1000" step="1" value="10">
                 </div>
                 <output id="lengthDnaOut">10</output>
             </div>
 
             <div class="info param-content" >
                     <label for = "popSizeIn">Population Size</label>
-                    <input class="input-range" type="range" id="popSizeIn" max="100" step="1" value="1">
-                    <output id="popSizeOut">1</output>
+                    <input class="input-range" type="range" id="popSizeIn" max="100" step="1" value="100">
+                    <output id="popSizeOut">100</output>
                 </div>
                 <div class="info param-content">
                     <label for="intervalIn">Step Interval (ms)</label>
