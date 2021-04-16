@@ -1,7 +1,7 @@
 import {TOOL_BRUSH, TOOL_BUCKET, TOOL_CIRCLE, TOOL_LINE, TOOL_PEN, TOOL_POLYGON, TOOL_RECT, TOOL_TRI} from './Tools.js'
 import Paint from './Paint.js'
 import {addGAParamEventHandle, registerFootPrintHandle} from './handleDomElements.js'
-import { qAll, qAllClick } from './alias.js';
+import { qAll,qry, qAllClick } from './alias.js';
 
 Node.prototype.on = Node.prototype.addEventListener;
 export const paint = new Paint("canvas")

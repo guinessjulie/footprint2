@@ -10,9 +10,9 @@ import {calcDnaLength, params} from './gaParams.js'
 import Polygon from './Polygon.js'
 import Parcel from './Parcel.js'
 import {permitFaRatio} from './global.js';
-import DNA from './ga/dna.js'
+import Gene from './ga/dna.js'
 import Footprints from './footprints.js'
-import {animationId }from './footprints.js'
+import {frameId }from './footprints.js'
 //from menu execution, a instance of parcel is globaly used.
 
 export let parcel;
@@ -105,7 +105,7 @@ export function onPopulate(){
     // gridPopulateFoot()
 }
 export function onStopEvolve(){
-    cancelAnimationFrame(animationId);
+    cancelAnimationFrame(frameIds);
 }
 export function gridPopulateFoot(){
     for(let i=0; i<params.numIndividuals; i++){
@@ -130,7 +130,7 @@ export function  createDNA(){
         }
         if(grid== undefined) grid=onGrid();
         let iter = calcDnaLength(parcel.area, permitFaRatio);
-        let dna = new DNA(iter, {cols:grid.cols, rows: grid.rows})
+        let dna = new Gene(iter, {cols:grid.cols, rows: grid.rows})
         //forTests
         grid.dnaToFootprintMatrix(dna);
         return dna;

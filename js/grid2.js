@@ -14,18 +14,16 @@ import {qId} from "./alias.js";
 export default class Grid{
     constructor(canvasId, parcel){
         this.parcel = parcel;
-        this.initializeGrid(canvasId, parcel);
-    }
-
-    initializeGrid(canvasId){
         this.canvas = qId(canvasId);
-        this.ctx = getContext2d(canvasId)
+        this.ctx = this.canvas.getContext("2d")
         this.setColsRows();
         this.arr2d = to2DArray(this.cols, this.rows );
         this.matCellInside = to2DArray(this.cols, this.rows);
         this.activeCell = 0; //todo this.activeCell은 매번 +1로 할당 validCellCount로 쓸 수 있을 거 같다.
         this.nitro = ''
         this.getCellInsideParcel();
+    }
+
         //Inference:  this.matCellInside checks if the cell is inside the parcel or not.
         //the object cell that checks is the whole cells in the grid.
         // and the grid is the boundingbox of the parcel
@@ -34,7 +32,6 @@ export default class Grid{
         // once it the parcel has created, the this.matCellInside is static.
         // So then, after footprint has created what should be cleaned up in grid?
         // to do : 1.displayu
-    }
     initializeFootprint(){
         this.arr2d=to2DArray(this.cols, this.rows);
         this.nitro = '';
@@ -42,6 +39,59 @@ export default class Grid{
     setColsRows() {
         this.cols = Math.floor((this.parcel.bbox.max.x - this.parcel.bbox.min.x) / CELL_SIZE);
         this.rows = Math.floor((this.parcel.bbox.max.y - this.parcel.bbox.min.y) / CELL_SIZE);
+    }
+    displayCell(col, row, color='black'){
+        this.ctx.save();
+        let size = CELL_SIZE;
+        this.ctx.lineWidth = 1 ;
+        this.ctx.fillStyle = color;
+        let loc = {col, row, size}
+        let x = this.translate(loc).x
+        let y = this.translate(loc).y;
+        let w = this.translate(loc).w;
+        this.ctx.translate(x, y);
+        this.ctx.fillRect(0, 0, w, w);
+        this.ctx.restore();
+    }
+
+    
+//    initCanvasGrid(lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
+//        for (let col in [...new Array(this.cols).keys()]){
+//            for(let row in [...new Array(this.rows).keys()]){
+//                this.ctx.save();
+//                let { x, y, w } = this.toCoords(col, row);
+//                this.ctx.translate(x, y);
+//                this.ctx.fillStyle = fillStyle;
+//                this.ctx.strokeStyle = strokeStyle;
+//                this.ctx.fillRect(0, 0, w, w);
+//                this.ctx.lineWidth = lineWidth;
+//                this.ctx.strokeRect(0, 0, w, w);
+//                this.ctx.font = '6px mono';
+//                let num = col.toString() + ' '+row.toString();
+//                this.ctx.strokeText(num, 3, (CELL_SIZE/2) );
+//                this.ctx.restore();
+//                //this.footprint = []; //refactor
+//            }
+//        }
+//    }
+    drawGridOnCanvas(lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
+        for (let col in [...new Array(this.cols).keys()]){
+            for(let row in [...new Array(this.rows).keys()]){
+                this.ctx.save();
+                let { x, y, w } = this.toCoords(col, row);
+                this.ctx.translate(x, y);
+                this.ctx.fillStyle = fillStyle;
+                this.ctx.strokeStyle = strokeStyle;
+                this.ctx.fillRect(0, 0, w, w);
+                this.ctx.lineWidth = lineWidth;
+                this.ctx.strokeRect(0, 0, w, w);
+                this.ctx.font = '6px mono';
+                let num = col.toString() + ' '+row.toString();
+                this.ctx.strokeText(num, 3, (CELL_SIZE/2) );
+                this.ctx.restore();
+                //this.footprint = []; //refactor
+            }
+        }
     }
 
 //only depends on grid and parcel;
@@ -65,27 +115,6 @@ export default class Grid{
     }
 
 
-
-    initCanvasGrid(lineWidth = 1, fillStyle = '#cef', strokeStyle = '#333'){
-
-        for (let col in [...new Array(this.cols).keys()]){
-            for(let row in [...new Array(this.rows).keys()]){
-                this.ctx.save();
-                let { x, y, w } = this.toCoords(col, row);
-                this.ctx.translate(x, y);
-                this.ctx.fillStyle = fillStyle;
-                this.ctx.strokeStyle = strokeStyle;
-                this.ctx.fillRect(0, 0, w, w);
-                this.ctx.lineWidth = lineWidth;
-                this.ctx.strokeRect(0, 0, w, w);
-                this.ctx.font = '6px mono';
-                let num = col.toString() + ' '+row.toString();
-                this.ctx.strokeText(num, 3, (CELL_SIZE/2) );
-                this.ctx.restore();
-                //this.footprint = []; //refactor
-            }
-        }
-    }
 
 
     toCoords(col, row) {
@@ -224,19 +253,6 @@ export default class Grid{
         let size = this.size;
         this.ctx.lineWidth = 1;
         this.ctx.fillRect(col*size, row*size, size-3, size-3)
-    }
-    displayCell(col, row, color='black'){
-        this.ctx.save();
-        let size = CELL_SIZE;
-        this.ctx.lineWidth = 1 ;
-        this.ctx.fillStyle = color;
-        let loc = {col, row, size}
-        let x = this.translate(loc).x
-        let y = this.translate(loc).y;
-        let w = this.translate(loc).w;
-        this.ctx.translate(x, y);
-        this.ctx.fillRect(0, 0, w, w);
-        this.ctx.restore();
     }
 
     displayCells(arr, id=1, color='red' ){

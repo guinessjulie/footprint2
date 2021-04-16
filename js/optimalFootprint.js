@@ -7,7 +7,7 @@ export default class OptimalFootprint{
         this.canvas = document.getElementById('canvas-generation');
         this.ctx = this.canvas.getContext("2d");
         drawOnCanvas('canvas-generation', parcel.vertices, "#35e664");
-        this.displayGridCells(footMat);
+        //this.displayGridCells(footMat);
     }
     displayGridCells(footMat){
         let color = 'red';
