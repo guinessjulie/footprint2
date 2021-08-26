@@ -1,276 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Canvas</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-        <link rel="stylesheet" href="style2.css">
-        <script src = './js/libs/canvas2svg.js'></script>
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js" integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw==" crossorigin="anonymous"></script> -->
-        <!-- <script src="https://unpkg.com/mathjs@8.0.0/"></script> -->
-        <script src="./js/libs/matrix-js/lib/index.js" type = 'module'></script>
-    <script src="./js/app.js" type='module' defer></script>
-</head>
-<body>
-<main>
-    <div class = 'nav-top'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style2.css" />
+    <script src="./js/libs/canvas2svg.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js" integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw==" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://unpkg.com/mathjs@8.0.0/"></script> -->
+    <script src="./js/libs/matrix-js/lib/index.js" type="module"></script>
+    <script src="./js/app.js" type="module" defer></script>
+  </head>
+  <body>
+    <main>
+      <div class="nav-top">
         <ul>
-            <li class="parcel navitem" data-menu = 'parcel' title='Load New Parcel'>
-                <i class="fas fa-map fa-2x"></i>
-            </li>
-            <li class ='grid navitem' data-menu = 'create-grid' title='create-grid'>
-                <i class="fa fa-th fa-2x" aria-hidden="true"></i>
-            </li>
-            <li class ='footprint navitem' data-menu = 'footprint' title='footprint'>
-                <i class="fab fa-buromobelexperte fa-2x"></i>
-            </li>
-            <li class = 'validate navitem' data-menu="validate" title='validate'>
-                <i class="fas fa-eraser fa-2x"></i>
-            <li class = 'parcel-footprint  navitem' data-menu = "preview" title="preview">
-                <i class="fab fa-accusoft fa-2x"></i></li>
-            <li class='populate navitem' data-menu="populate" title="populate">
-                <i class="fas fa-arrows-alt fa-2x"></i>
-            </li>
-            <li class = 'evolve navitem' data-menu='evolve' title='evolve'>
-                <i class="fab fa-airbnb fa-2x"></i>
-            </li>
-            <li class = 'About navitem'>
-                <i class="fas fa-text-height fa-2x"></i></li>
-            <li class='stop navitem'>
-                <i class="fas fa-stop fa-2x"></i>
-            </li>
-            </ul>
-        </div>
+          <li class="parcel navitem" data-menu="parcel" title="Load New Parcel">
+            <i class="fas fa-map fa-2x"></i>
+          </li>
+          <li class="grid navitem" data-menu="create-grid" title="create-grid">
+            <i class="fa fa-th fa-2x" aria-hidden="true"></i>
+          </li>
+          <li class="footprint navitem" data-menu="footprint" title="footprint">
+            <i class="fab fa-buromobelexperte fa-2x"></i>
+          </li>
+          <li class="validate navitem" data-menu="validate" title="validate">
+            <i class="fas fa-eraser fa-2x"></i>
+          </li>
 
-    <div class = 'toolbox left'>
-        <div class='group command'>
-            <div class='item' data-command='undo' title='undo'>
-                <i class="fas fa-undo"></i>
-            </div>
+          <li
+            class="parcel-footprint navitem"
+            data-menu="preview"
+            title="preview"
+          >
+            <i class="fab fa-accusoft fa-2x"></i>
+          </li>
+          <li class="populate navitem" data-menu="populate" title="populate">
+            <i class="fas fa-arrows-alt fa-2x"></i>
+          </li>
+          <li class="evolve navitem" data-menu="evolve" title="evolve">
+            <i class="fab fa-airbnb fa-2x"></i>
+          </li>
+          <li class="About navitem">
+            <i class="fas fa-text-height fa-2x"></i>
+          </li>
+          <li class="stop navitem">
+            <i class="fas fa-stop fa-2x"></i>
+          </li>
+        </ul>
+      </div>
+
+      <div class="toolbox left">
+        <div class="group command">
+          <div class="item" data-command="undo" title="undo">
+            <i class="fas fa-undo"></i>
+          </div>
         </div>
-        <div class='group command'>
-            <div class='item' data-command='download' title='download'>
-                <i class="fas fa-download"></i>            
-            </div>
+        <div class="group command">
+          <div class="item" data-command="download" title="download">
+            <i class="fas fa-download"></i>
+          </div>
         </div>
         <div class="group tool">
-            <div class='item active' data-tool = 'pen' id = 'pen' title='pen'>
-                <i class='fas fa-pen'></i>
-            </div>
-            <div class='item' data-tool = 'brush' id = 'brush' title='brush'>
-                <i class = 'fas fa-paint-brush'></i>
-            </div>
-            <div class='item' data-tool = 'bucket' id = 'bucket' title='bucket'>
-                <i class='fas fa-fill-drip'></i>
-            </div>
-            <div class='item' data-tool = 'eraser' id = 'eraser' title='eraser'>
-                <i class = 'fas fa-eraser'></i>
-            </div>
+          <div class="item active" data-tool="pen" id="pen" title="pen">
+            <i class="fas fa-pen"></i>
+          </div>
+          <div class="item" data-tool="brush" id="brush" title="brush">
+            <i class="fas fa-paint-brush"></i>
+          </div>
+          <div class="item" data-tool="bucket" id="bucket" title="bucket">
+            <i class="fas fa-fill-drip"></i>
+          </div>
+          <div class="item" data-tool="eraser" id="eraser" title="eraser">
+            <i class="fas fa-eraser"></i>
+          </div>
         </div>
-        <div class='group geometry'>
-            <div class='item' data-tool = 'line' id='line' title='line'>
-                <i class='fa fa-stream'></i>
-            </div>
-            <div class='item' data-tool = 'rectangle' id='rectangle' title='rectangle'>
-                <i class='fa fa-square'></i>
-            </div>
-            <div class='item' data-tool = 'circle' id='circle' title='circle'>
-                <i class='fa fa-circle'></i>
-            </div>
-            <div class='item' data-tool = 'triangle' id='triangle' title='triangle'>
-                <i class='fa fa-play fa-rotate-270'></i>
-            </div>
-            <div class='item' data-tool = 'polygon' id='polygon' title='polygon'>
-                <i class='fa fa-draw-polygon'></i>
-            </div>
+        <div class="group geometry">
+          <div class="item" data-tool="line" id="line" title="line">
+            <i class="fa fa-stream"></i>
+          </div>
+          <div
+            class="item"
+            data-tool="rectangle"
+            id="rectangle"
+            title="rectangle"
+          >
+            <i class="fa fa-square"></i>
+          </div>
+          <div class="item" data-tool="circle" id="circle" title="circle">
+            <i class="fa fa-circle"></i>
+          </div>
+          <div class="item" data-tool="triangle" id="triangle" title="triangle">
+            <i class="fa fa-play fa-rotate-270"></i>
+          </div>
+          <div class="item" data-tool="polygon" id="polygon" title="polygon">
+            <i class="fa fa-draw-polygon"></i>
+          </div>
+        </div>
+        <div class="group stroks pen" style="display: block">
+          <div class="item active" data-line-width="1" id="1" title="1 pixel">
+            <div class="stroke" style="width: 1px; height: 1px"></div>
+          </div>
+          <div class="item" data-line-width="2" id="2" title="2 pixel">
+            <div class="stroke" style="width: 2px; height: 2px"></div>
+          </div>
+          <div class="item" data-line-width="3" id="3" title="3 pixel">
+            <div class="stroke" style="width: 3px; height: 3px"></div>
+          </div>
+          <div class="item" data-line-width="4" id="4" title="4 pixel">
+            <div class="stroke" style="width: 4px; height: 4px"></div>
+          </div>
+          <div class="item" data-line-width="5" id="5" title="5 pixel">
+            <div class="stroke" style="width: 5px; height: 5px"></div>
+          </div>
+        </div>
+        <div class="group stroks brush" style="display: none">
+          <div class="item active" data-brush-size="4">
+            <div class="stroke" style="width: 4px; height: 4px"></div>
+          </div>
+          <div class="item" data-brush-size="8" id="8" title="8 pixel">
+            <div class="stroke" style="width: 8px; height: 8px"></div>
+          </div>
+          <div class="item" data-brush-size="12" id="12" title="12 pixel">
+            <div class="stroke" style="width: 12px; height: 12px"></div>
+          </div>
+          <div class="item" data-brush-size="16" id="16" title="16 pixel">
+            <div class="stroke" style="width: 16px; height: 16px"></div>
+          </div>
+          <div class="item" data-brush-size="20" id="20" title="20 pixel">
+            <div class="stroke" style="width: 20px; height: 20px"></div>
+          </div>
+          <div class="item" data-brush-size="24" id="24" title="24 pixel">
+            <div class="stroke" style="width: 24px; height: 24px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="toolbox right">
+        <div class="group colors">
+          <div class="item active" data-color="#ccd">
+            <div class="swatch" style="background-color: #ccd"></div>
+          </div>
+          <div class="item" data-color="#889">
+            <div class="swatch" style="background-color: #889"></div>
+          </div>
+          <div class="item" data-color="#223">
+            <div class="swatch" style="background-color: #223"></div>
+          </div>
+          <div class="item" data-color="#f00">
+            <div class="swatch" style="background-color: #f00"></div>
+          </div>
+          <div class="item" data-color="#ff0">
+            <div class="swatch" style="background-color: #ff0"></div>
+          </div>
+          <div class="item" data-color="#f0f">
+            <div class="swatch" style="background-color: #f0f"></div>
+          </div>
+          <div class="item" data-color="#0f0">
+            <div class="swatch" style="background-color: #0f0"></div>
+          </div>
+          <div class="item" data-color="#0ff">
+            <div class="swatch" style="background-color: #0ff"></div>
+          </div>
+          <div class="item" data-color="#00f">
+            <div class="swatch" style="background-color: #00f"></div>
+          </div>
+          <div class="item" data-color="#6849f3">
+            <div class="swatch" style="background-color: #6849f3"></div>
+          </div>
+        </div>
+      </div>
 
-        </div>
-        <div class = 'group stroks pen' style='display:block'>
-            <div class='item active' data-line-width = '1' id='1' title='1 pixel'>
-                <div class='stroke' style='width:1px; height:1px;'></div>
-            </div>
-            <div class='item' data-line-width = '2' id='2' title='2 pixel'>
-                <div class='stroke' style='width:2px; height:2px;'></div>
-            </div>
-            <div class='item' data-line-width = '3' id='3' title='3 pixel'>
-                <div class='stroke' style='width:3px; height:3px;'></div>
-            </div>
-            <div class='item' data-line-width = '4' id='4' title='4 pixel'>
-                <div class='stroke' style='width:4px; height:4px;'></div>
-            </div>
-            <div class='item' data-line-width = '5' id='5' title='5 pixel'>
-                <div class='stroke' style='width:5px; height:5px;'></div>
-            </div>
-
-        </div>
-        <div class='group stroks brush' style='display:none'>
-            <div class='item active' data-brush-size='4'>
-                <div class='stroke' style='width:4px;height:4px;'></div>
-            </div>
-            <div class='item' data-brush-size = '8' id='8' title='8 pixel'>
-                <div class='stroke' style='width:8px; height:8px;'></div>
-            </div>
-            <div class='item' data-brush-size = '12' id='12' title='12 pixel'>
-                <div class='stroke' style='width:12px; height:12px;'></div>
-            </div>
-            <div class='item' data-brush-size = '16' id='16' title='16 pixel'>
-                <div class='stroke' style='width:16px; height:16px;'></div>
-            </div>
-            <div class='item' data-brush-size = '20' id='20' title='20 pixel'>
-                <div class='stroke' style='width:20px; height:20px;'></div>
-            </div>
-            <div class='item' data-brush-size = '24' id='24' title='24 pixel'>
-                <div class='stroke' style='width:24px; height:24px;'></div>
-            </div>
-        </div>        
-    </div>
-    <div class='toolbox right'>
-    <div class='group colors'>
-            <div class = 'item active' data-color='#ccd'>
-                <div class='swatch' style='background-color: #ccd;'></div>
-            </div>
-            <div class = 'item' data-color='#889'>
-                <div class='swatch' style='background-color: #889;'></div>
-            </div>
-            <div class = 'item' data-color='#223'>
-                <div class='swatch' style='background-color: #223;'></div>  
-            </div>
-            <div class = 'item' data-color='#f00'>
-                <div class='swatch' style='background-color: #f00;'></div>
-            </div>
-            <div class = 'item' data-color='#ff0'>
-                <div class='swatch' style='background-color: #ff0;'></div>
-            </div>
-            <div class = 'item' data-color='#f0f'>
-                <div class='swatch' style='background-color: #f0f;'></div>
-            </div>
-            <div class = 'item' data-color='#0f0'>
-                <div class='swatch' style='background-color: #0f0;'></div>
-            </div>
-            <div class = 'item' data-color='#0ff'>
-                <div class='swatch' style='background-color: #0ff;'></div>
-            </div>
-            <div class = 'item' data-color='#00f'>
-                <div class='swatch' style='background-color: #00f;'></div>
-            </div>
-            <div class = 'item' data-color='#6849f3'>
-                <div class='swatch' style='background-color: #6849f3;'></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="canvas-container">
-        <canvas id= 'canvas-generation' width="630" height="480"></canvas>
-        <canvas id = 'canvas' width="630" height="480"></canvas>
-    </div>
-    <div  class="info-container">
+      <div class="canvas-container">
+        <canvas id="canvas-generation" width="630" height="480"></canvas>
+        <canvas id="canvas" width="630" height="480"></canvas>
+      </div>
+      <div class="info-container">
         <div id="input-container" class="info-box">
-            <div class="info-head">
-                <h3>Input Parameters</h3>
+          <div class="info-head">
+            <h3>Input Parameters</h3>
+          </div>
+          <div class="info">
+            <label for="input-faRatio" class="info-label">
+              Max Floor Area Ratio
+            </label>
+            <div>
+              <input
+                class="input-option"
+                type="number"
+                id="input-faRatio"
+                value="30"
+              />
+              %
             </div>
-            <div class="info">
-                <label for="input-faRatio" class="info-label"> Max Floor Area Ratio </label>
-                <div>
-                    <input class = "input-option" type="number" id="input-faRatio" value="30"> %
-                </div>
+          </div>
+          <div class="info">
+            <label for="input-cell-size" class="info-label">Cell Size</label>
+            <div>
+              <input
+                type="number"
+                class="input-option"
+                name="input-cell-size"
+                id="input-cell-size"
+                value="30"
+              />px
             </div>
-            <div class="info">
-                <label for="input-cell-size" class="info-label">Cell Size</label>
-                <div>
-                    <input type="number" class = "input-option" name="input-cell-size" id="input-cell-size" value="30">px
-                </div>
-            </div>
-            <div class="info">
-                <!-- <label for="checkbox-start-position"> Start Position-->
-                <fieldset>
-                    <legend>Start Position</legend>
-                    <div id="checkbox-start-position">
-                        <input type="checkbox" name="start-position" id="middle" value="middle" checked>
-                        <label for="middle">Middle</label>
-                        <input type="checkbox" name="start-position" id="random">
-                        <label for="random">Random</label>
-                        <input type="checkbox" name="start-position" id="west">
-                        <label for="west">West</label>
-                        <input type="checkbox" name="start-position" id="east">
-                        <label for="east">East</label>
-                        <input type="checkbox" name="start-position" id="south">
-                        <label for="south">South</label>
-                        <input type="checkbox" name="start-position" id="north">
-                        <label for="north">North</label>
-                    </div>
-                <!--</label>-->
-                </fieldset>
-            </div>
+          </div>
+          <div class="info">
+            <!-- <label for="checkbox-start-position"> Start Position-->
+            <fieldset>
+              <legend>Start Position</legend>
+              <div id="checkbox-start-position">
+                <input
+                  type="checkbox"
+                  name="start-position"
+                  id="middle"
+                  value="middle"
+                  checked
+                />
+                <label for="middle">Middle</label>
+                <input type="checkbox" name="start-position" id="random" />
+                <label for="random">Random</label>
+                <input type="checkbox" name="start-position" id="west" />
+                <label for="west">West</label>
+                <input type="checkbox" name="start-position" id="east" />
+                <label for="east">East</label>
+                <input type="checkbox" name="start-position" id="south" />
+                <label for="south">South</label>
+                <input type="checkbox" name="start-position" id="north" />
+                <label for="north">North</label>
+              </div>
+              <!--</label>-->
+            </fieldset>
+          </div>
         </div>
 
-        <div id = "param-container" class="info-box" >
-                <div class="info-head">
-                    <h3> Configure GA Parameter </h3>
-                </div>
-            <div class="info param-content" >
-                <label for = "lengthDnaIn">Force DNA Length</label>
-                <div class="force-dna-input">
-                    <input type="checkbox" id="checkbox-dna-size"
-                           name = "force-dna-size" value="on"
-                           class="info-checkbox" checked>
-                    <input class="input-range" type="range" id="lengthDnaIn" max="1000" step="1" value="10">
-                </div>
-                <output id="lengthDnaOut">10</output>
+        <div id="param-container" class="info-box">
+          <div class="info-head">
+            <h3>Configure GA Parameter</h3>
+          </div>
+          <div class="info param-content">
+            <label for="lengthDnaIn">Force DNA Length</label>
+            <div class="force-dna-input">
+              <input
+                type="checkbox"
+                id="checkbox-dna-size"
+                name="force-dna-size"
+                value="on"
+                class="info-checkbox"
+                checked
+              />
+              <input
+                class="input-range"
+                type="number"
+                id="lengthDnaIn"
+                max="1000"
+                step="1"
+                value="5"
+              />
             </div>
+            <!-- <output id="lengthDnaOut">10</output> -->
+          </div>
+          <div class="info param-content">
+            <label for="numGeneration">Number of Generation</label>
+            <input
+              id="numGeneration"
+              type="number"
+              min="1"
+              max="1000"
+              step="1"
+              value="3"
+            />
+          </div>
 
-            <div class="info param-content" >
-                    <label for = "popSizeIn">Population Size</label>
-                    <input class="input-range" type="range" id="popSizeIn" max="100" step="1" value="100">
-                    <output id="popSizeOut">100</output>
-                </div>
-                <div class="info param-content">
-                    <label for="intervalIn">Step Interval (ms)</label>
-                    <input class="input-range" type="range" id="intervalIn" max="500" step="10" value="100">
-                    <output id="intervalOut" >100</output>
-                </div >
-                <div class="info param-content">
-                    <label for="pCrossIn">Crossover Chance</label>
-                    <input class="input-range" type="range" id="pCrossIn" max="1" step=".01" value="0.5">
-                    <output id="pCrossOut" >0.5</output>
-                </div>
-                <div class="info param-content">
-                    <label for="pMutateIn">Mutation Chance</label>
-                    <input class="input-range" type="range" id="pMutateIn"  max="1" step=".01" value="0.1">
-                    <output id="pMutateOut" >0.1</output>
-                </div>
+          <div class="info param-content">
+            <label for="popSizeIn">Population Size</label>
+            <input
+              class="input-range"
+              type="number"
+              id="popSizeIn"
+              max="1000"
+              step="1"
+              value="10"
+            />
+            <!-- <output id="popSizeOut">100</output> -->
+          </div>
+          <div class="info param-content">
+            <label for="intervalIn">Step Interval (ms)</label>
+            <input
+              class="input-range"
+              type="range"
+              id="intervalIn"
+              max="500"
+              step="10"
+              value="100"
+            />
+            <output id="intervalOut">100</output>
+          </div>
+          <div class="info param-content">
+            <label for="pCrossIn">Crossover Chance</label>
+            <input
+              class="input-range"
+              type="range"
+              id="pCrossIn"
+              max="1"
+              step=".1"
+              value="1"
+            />
+            <output id="pCrossOut">0.5</output>
+          </div>
+          <div class="info param-content">
+            <label for="pMutateIn">Mutation Chance</label>
+            <input
+              class="input-range"
+              type="range"
+              id="pMutateIn"
+              max="1"
+              step=".01"
+              value="0.1"
+            />
+            <output id="pMutateOut">0.1</output>
+          </div>
         </div>
-        <div id = "status-container" class="info-box">
-            <div class="info-head">
-                <h3> Status Information </h3>
-            </div>
-            <div class="info">
-                <label for="out-generation">Generation : </label>
-                <output id = "out-generation">1</output>
-            </div>
-            <div class="info">
-                <label for="out-individual">Individual ID: </label>
-                <output id = "out-individual">1</output>
-            </div>
-            <div class="info">
-                <label for="out-parcel-area">Parcel Area : </label>
-                <output id="out-parcel-area"></output>
-            </div>
-            <div class="info">
-                <label for="out-faRatio">Floor Area Ratio : </label>
-                <output id = "out-faRatio"></output>
-            </div>
-            <div class="info">
-                <label for="out-boundary-length">Boundary Perimeter : </label>
-                <output id ="out-boundary-length"></output>
-            </div>
-            <div class="info">
-                <label for="out-orientation">Orientation</label>
-                <output id = "out-orientation"></output>
-            </div>
+        <div id="status-container" class="info-box">
+          <div class="info-head">
+            <h3>Status Information</h3>
+          </div>
+          <div class="info">
+            <label for="out-generation">Generation : </label>
+            <output id="out-generation">1</output>
+          </div>
+          <div class="info">
+            <label for="out-individual">Individual ID: </label>
+            <output id="out-individual">1</output>
+          </div>
+          <div class="info">
+            <label for="out-parcel-area">Parcel Area : </label>
+            <output id="out-parcel-area"></output>
+          </div>
+          <div class="info">
+            <label for="out-faRatio">Floor Area Ratio : </label>
+            <output id="out-faRatio"></output>
+          </div>
+          <div class="info">
+            <label for="out-boundary-length">Boundary Perimeter : </label>
+            <output id="out-boundary-length"></output>
+          </div>
+          <div class="info">
+            <label for="out-orientation">Orientation</label>
+            <output id="out-orientation"></output>
+          </div>
+          <div class="info">
+            <label for="out-len-area-ratio">Length Area Ratio</label>
+            <output id="out-len-area-ratio"></output>
+          </div>
         </div>
-    </div>
-
-</main>
-</body>
+        <div class="info-box">
+          <div class="info-head">
+            <h3>Actions</h3>
+          </div>
+          <button id="pauseButton">Stop</button>
+          <button id="downloadButton">Download Data</button>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
