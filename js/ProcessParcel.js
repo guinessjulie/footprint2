@@ -14,10 +14,13 @@ import Gene from "./ga/gene.js";
 import Footprints from "./footprints.js";
 import { frameId } from "./footprints.js";
 import { PAUSE_CANVAS } from "./globalState.js";
+import { qry } from "./alias.js";
 //from menu execution, a instance of parcel is globaly used.
 
 export let parcel;
 export let grid;
+let stopAni = false;
+let footprints;
 const createDefaultParcel = () => {
   let domRect = canvas.getBoundingClientRect();
   let rect = new Rect(new Vec2(0, 0), new Vec2(domRect.width, domRect.height));
@@ -102,12 +105,19 @@ export function onPopulate_org() {
 export function onPopulate() {
   if (parcel == undefined) parcel = onParcel();
   if (grid == undefined) grid = onGrid("canvas");
-  let footprints = new Footprints();
+  footprints = new Footprints();
   // gridPopulateFoot()
 }
 export function onStopEvolve() {
   console.log(`stopButtonPressed`);
-  cancelAnimationFrame(frameId);
+  stopAni = !stopAni;
+  if (stopAni) {
+    cancelAnimationFrame(frameId);
+    qry("#pause").className = "fas fa-play fa-2x";
+  } else {
+    requestAnimationFrame(footprints.draw.bind(footprints));
+    qry("#pause").className = "fas fa-pause fa-2x";
+  }
 }
 export function gridPopulateFoot() {
   for (let i = 0; i < params.numIndividuals; i++) {

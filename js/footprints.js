@@ -66,12 +66,12 @@ export default class Footprints {
     ); //parcel 바깥에 있는 셀들을 disable시켜라
   }
   draw() {
-    this.frameId = requestAnimationFrame(this.draw.bind(this));
+    frameId = requestAnimationFrame(this.draw.bind(this));
     const numGen = qId("numGeneration").value;
     let pause = false;
     if (this.generation >= numGen) {
       // todo generation change
-      cancelAnimationFrame(this.frameId);
+      cancelAnimationFrame(frameId);
     }
     if (this.cur < params.popSize) {
       this.drawFootprint();
