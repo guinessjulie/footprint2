@@ -84,204 +84,55 @@ export default class Footprints {
       this.evolve();
       this.cur = 0;
     }
-    // this.drawBest()
-    //this.displayGeneration(floor);
   }
   evolve() {
     this.generation += 1;
     qry("#out-generation").value = this.generation;
     //let matingPool = this.createMatingPoolByRouletteWheel();
     let matingPool = this.createMatingPoolByLenAreaRatio();
-    this.selectReproduce(matingPool);
-  }
-  reproduce_test(matingPool, idxA, idxB, parentAIdx, parentBIdx) {
-    let objA = {};
-    let objB = {};
-    objA = JSON.parse(JSON.stringify(this.popSet[parentAIdx].gene)); //for deep copy
-    objB = JSON.parse(JSON.stringify(this.popSet[parentBIdx].gene)); //for deep copy
-    console.log(`=>=>=>A`, parentAIdx, objA.dna);
-    console.log(`=>=>=>B`, parentBIdx, objB.dna);
-    let childGene = objA.crossoverRandomPoint(objB);
-    this.popSet.map((pop, idx) => {
-      console.log(`=>=>=>after crossoverRandomPoint`, idx, pop.gene.dna);
-    });
-    const mutRate = qId("pMutateIn").value;
-    const newGene = childGene.mutate(mutRate);
-    // console.log(`childGene, newGene`, childGene, newGene);
-    return newGene;
-  }
-  reproduce(matingPool, idxA, idxB, parentAIdx, parentBIdx) {
-    // console.log(`=>=>=>inside the reproduce(): before`);
-    let geneA = this.popSet[parentAIdx].gene; //여기까지 this.popSet as it was before
-    let geneB = this.popSet[parentBIdx].gene;
-    //이렇게 하면  geneA 값이 변경되면 this.popSet 값이 같이 변경된다 병신같아
-
-    // let fitA = this.popSet[matingPool[idxA]].attr.lenAreaRatio;
-    // let fitB = this.popSet[matingPool[idxB]].attr.lenAreaRatio;
-    // console.log(`fitA, fitB`, fitA, fitB);
-
-    //childGene = geneA.crossoverRandomPoint(geneB);
-    let dnaA = JSON.parse(JSON.stringify(geneA.dna));
-    let dnaB = JSON.parse(JSON.stringify(geneB.dna));
-
-    let newDNA = Gene.crossoverDNA(dnaA, dnaB);
-    console.log(`=>=>=>A`, parentAIdx, dnaA);
-    console.log(`=>=>=>B`, parentBIdx, dnaB);
-    console.log(`=>=>=>newDNA`, newDNA);
-    // this.popSet.map((pop, idx) => {
-    //   console.log(`=>=>=>after crossoverRandomPoint`, idx, pop.gene.dna);
-    // });
-    // console.log(`childGene.dna`, childGene.dna);
-    const mutRate = qId("pMutateIn").value;
-    const mutDNA = Gene.mutate(newDNA, mutRate);
-    console.log(`=>=>=>mutDNA`, mutDNA);
-    let childGene = new Gene(this.gridSize, mutDNA.length);
-    childGene.dna = [...mutDNA];
-    console.log(`=>=>=>mutated childGene.dna`, childGene.dna);
-    return childGene;
-  }
-  createNewCrossoverGene(geneA, geneB) {
-    let newGene = new Gene(this.gridSize, geneA.dna.length);
-    let newDNA = [];
-    let splitPoint = Math.floor(
-      Math.random() * (Math.min(geneA.dna.length, geneB.dna.length) - 1) + 1
-    );
-    for (let i = 0; i < splitPoint; i++) {
-      newDNA.push(geneA.dna[i]);
-    }
-    for (let j = splitPoint; j < geneB.dna.length; j++) {
-      newDNA.push(geneB.dna[j]);
-    }
-    newGene.dna = newDNA;
-    return newGene;
-  }
-
-  selectReproduce(matingPool) {
     let newPop = [];
-    // console.log(`=>selectReproduce: `);
     for (let i = 0; i < params.popSize; i++) {
-      let childNode;
-      let idxA = Math.floor(Math.random() * matingPool.length);
-      let idxB = Math.floor(Math.random() * matingPool.length);
-      let parentAIdx = matingPool[idxA];
-      let parentBIdx = matingPool[idxB];
-      let childGene;
-      console.log(
-        `=>=>pop[${i}] A, B`,
-        parentAIdx,
-        this.popSet[parentAIdx].gene.dna,
-        parentBIdx,
-        this.popSet[parentBIdx].gene.dna
-      );
-      if (parentAIdx === parentBIdx) {
-        //같은 부모를 가리키면 그냥 아무거나 하나 넣는다.
-        childNode = this.popSet[parentAIdx];
-      } else {
-        childGene = this.reproduce(
-          matingPool,
-          idxA,
-          idxB,
-          parentAIdx,
-          parentBIdx
-        );
-        childNode = this.generateChild(childGene, i);
-      } //end else
-      console.log(`childNode`, childNode.gene.dna);
-      newPop.push(childNode);
-    } //for this.popSize
-    const fitLenAreaRatio = newPop.map((pop, idx) => {
-      console.log(`${idx}=>newPop`, pop.gene.dna, pop.attr.lenAreaRatio);
-      return pop.attr.lenAreaRatio;
-    });
-    const avgFit = getAverage(fitLenAreaRatio);
-    console.log(`=>average fitness of newPop`, avgFit);
+      let child = this.select(matingPool, i);
+      newPop.push(child);
+    }
+    this.printNewGenerationInfo(newPop);
     this.popSet = newPop;
     this.foots = [...this.popSet];
   }
 
-  selectReproduce_debug_crossoverchance(matingPool) {
-    let newPop = [];
-
-    for (let i = 0; i < params.popSize; i++) {
-      let childNode;
-      let idxA = Math.floor(Math.random() * matingPool.length);
-      let idxB = Math.floor(Math.random() * matingPool.length);
-      let parentAIdx = matingPool[idxA];
-      let parentBIdx = matingPool[idxB];
-
-      if (parentAIdx === parentBIdx) {
-        //같은 부모를 가리키면 그냥 아무거나 하나 넣는다.
-        childNode = this.popSet[parentAIdx];
-      }
-
-      console.log(`parentA, parentB`, parentAIdx, parentBIdx);
-      let geneA = this.popSet[parentAIdx].gene;
-      let geneB = this.popSet[parentBIdx].gene;
-      //todo change fitness from boundaryLength
-      //choose better parent when it is belower than crossover chances
-      console.log(
-        `this.popSet[matingPool[idxA]].attr.lenAreaRatio`,
-        this.popSet[matingPool[idxA]].attr.lenAreaRatio
-      );
-      console.log(
-        `this.popSet[matingPool[idxB]].attr.lenAreaRatio`,
-        this.popSet[matingPool[idxB]].attr.lenAreaRatio
-      );
-      let fitA = this.popSet[matingPool[idxA]].attr.boundaryLength;
-      let fitB = this.popSet[matingPool[idxB]].attr.boundaryLength;
-      console.log(`boundaryLength of FitA and FitB`, fitA, fitB);
-
-      //when fitness is the same, just toss the coin
-      let betterGene;
-      let betterGeneIdx;
-      let betterFit;
-      if (fitA === fitB) {
-        if (Math.floor(Math.random()) > 0.5) {
-          betterFit = fitA;
-          betterGene = geneA;
-          betterGeneIdx = parentAIdx;
-        } else {
-          betterFit = fitB;
-          betterGene = geneB;
-          betterGeneIdx = parentBIdx;
-        }
-      } else {
-        betterFit = fitA < fitB ? fitA : fitB;
-        betterGene = fitA < fitB ? geneA : geneB;
-        betterGeneIdx = fitA < fitB ? parentAIdx : parentBIdx;
-      }
-      console.log(
-        `betterGeneIdx, better Fitness`,
-        betterGeneIdx,
-        betterFit,
-        betterGene
-      );
-
-      let childGene;
-      const crossoverChance = params.pCrossOut;
-      // console.log(`betterGene`, betterGene);
-      // console.log(`params.pCrossOut`, crossoverChance);
-      // let better = this.popSet[matingPool[idxA]].attr.
-      let roll = Math.random();
-      // console.log(`roll:pCrossOut`, roll, crossoverChance);
-      if (roll < crossoverChance) {
-        //if the roll lower than a chance
-        // console.log(`childGene is betterGene`);
-        childGene = betterGene;
-        console.log(betterGeneIdx + `is selected`);
-      } else {
-        // console.log(`ChildGene is produced by crossover`);
-        childGene = geneA.crossoverRandomPoint(geneB);
-        console.log(`GeneA crossovered with GeneB`);
-        console.log(`childGene.dna`, childGene.dna);
-      }
+  select(matingPool, i) {
+    let childNode;
+    let idxA = Math.floor(Math.random() * matingPool.length);
+    let idxB = Math.floor(Math.random() * matingPool.length);
+    let parentAIdx = matingPool[idxA];
+    let parentBIdx = matingPool[idxB];
+    if (parentAIdx === parentBIdx) {
+      //같은 부모를 가리키면 그냥 아무거나 하나 넣는다.
+      childNode = { ...this.popSet[parentAIdx] };
+    } else {
+      const childGene = this.reproduce(parentAIdx, parentBIdx);
       childNode = this.generateChild(childGene, i);
-      newPop.push(childNode);
     }
-    this.popSet = newPop.slice();
-    this.foots = [...this.popSet];
+    return childNode;
   }
+  reproduce(parentAIdx, parentBIdx) {
+    let geneA = this.popSet[parentAIdx].gene;
+    let geneB = this.popSet[parentBIdx].gene;
+    let dnaA = [...geneA.dna];
+    let dnaB = [...geneB.dna];
+    let newDNA = Gene.crossoverDNA(dnaA, dnaB);
+    this.printReproduceDebug(dnaA, dnaB, newDNA);
 
+    const mutRate = qId("pMutateIn").value;
+    const mutDNA = Gene.mutate(newDNA, mutRate);
+    let childGene = new Gene(this.gridSize, mutDNA.length);
+    childGene.dna = [...mutDNA];
+    return childGene;
+  }
+  printReproduceDebug(dnaA, dnaB, newDNA) {
+    console.log(`dnaA, dnaB`, dnaA, dnaB);
+    console.log(`newDNA`, newDNA);
+  }
   generateChild(childGene, id) {
     let foot = new Footprint(childGene, id);
     let childNode = {
@@ -293,104 +144,16 @@ export default class Footprints {
     };
     return childNode;
   }
-
-  selectReproduceWithLog(matingPool) {
-    console.log(`this.popSet`, this.popSet);
-    console.log(`matingPool`, matingPool);
-    let newPop = [];
-    const dnaString = this.popSet.map((item) => {
-      return item.gene.dna + ": " + item.attr.boundaryLength;
+  printNewGenerationInfo(newPop) {
+    console.log(`new population`);
+    const fitLenAreaRatio = newPop.map((pop, idx) => {
+      console.log(`${idx}`, pop.gene.dna, pop.attr.lenAreaRatio);
+      return pop.attr.lenAreaRatio;
     });
-    //console.log(`this.popSet`, this.popSet);
-    console.log(
-      `selectReproduce popSet.gene.dna: before loop(popSize)`,
-      dnaString
-    );
-    console.log(`matingPool`, matingPool);
-    for (let i = 0; i < params.popSize; i++) {
-      let idxA = Math.floor(Math.random() * matingPool.length);
-      let idxB = Math.floor(Math.random() * matingPool.length);
-      // console.log(`idxA, idxB`, idxA, idxB);
-      // console.log(`matingPool[idxA]`, `matingPool[idxB]`);
-      // console.log(matingPool[idxA], matingPool[idxB]);
-      // console.log(`this.popSet`, this.popSet);
-      let attrA = this.popSet[matingPool[idxA]];
-      let attrB = this.popSet[matingPool[idxB]];
-      // console.log(`attrA, attrB`, attrA, attrB);
-      let geneA = attrA.gene;
-      let geneB = attrB.gene;
-      // console.log(`geneA, geneB`, geneA, geneB);
-      let childGene = geneA.crossoverRandomPoint(geneB);
-      // console.log(`childGene`, childGene);
-      // let childGene = geneA.crossoverRandomPoint(geneB);
-      let foot = new Footprint(childGene, i);
-      let childNode = {
-        id: i,
-        gene: childGene, //todo duplicate gene, attr.gene
-        attr: foot.attr,
-        validFootprintMatrix: foot.validFootprintMatrix,
-        generation: childGene.generation + 1, //to implement
-      };
-      // console.log(`geneA, geneB`, geneA, geneB);
-      // console.log(`childGene`, childGene);
-      newPop.push(childNode);
-      // console.log(`indInfo`, indInfoA, indInfoB);
-    }
-    this.popSet = newPop;
-    const dnaString2 = this.popSet.map((item) => item.gene.dna);
-    // console.log(
-    //   "selectReproduce popSet.gene.dna: after loop(popSize)",
-    //   dnaString2
-    // );
-    this.foots = [...this.popSet];
-    // console.log(`this.foots`, this.foots);
+    const avgFit = getAverage(fitLenAreaRatio);
+    console.log(`=>average fitness`, avgFit);
   }
 
-  select(matingPool) {
-    // console.log(`this.popSet`, this.popSet);
-    let newPop = [];
-
-    for (let i = 0; i < params.popSize; i++) {
-      let selectedIdx = Math.floor(Math.random() * matingPool.length);
-      let selectedAttr = this.popSet[matingPool[selectedIdx]];
-      let indInfo = {
-        id: i,
-        gene: selectedAttr.gene,
-        attr: selectedAttr.attr,
-        validFootprintMatrix: selectedAttr.validFootprintMatrix,
-        generation: selectedAttr.generation + 1, //to implement
-      }; //need crossover and mutation
-      //   console.log(`newly selected individual`, indInfo);
-      newPop.push(indInfo);
-
-      // let gene = new Gene(this.gridSize, geneSize)
-      // let foot = new Footprint(gene, i);
-      // let indInfo = {
-      //     id: i,
-      //     gene:gene,
-      //     attr : foot.attr,
-      //     validFootprintMatrix: foot.validFootprintMatrix,
-      //     generation:0, //to implement
-      // }
-      // this.popSet.push(indInfo) ;
-    }
-
-    // to see average fitness value after evolved in each generation
-    // const avgFit = newPop.reduce((avg, ind, _, { length }) => {
-    //   return avg + ind.attr.boundaryLength / length;
-    // }, 0);
-
-    this.popSet = newPop;
-    this.foots = [...this.popSet];
-  }
-  //to implement
-  createGeneration(numIndividual) {
-    let generation = {
-      genId: 0,
-      numInd: numIndividual,
-      selected: [],
-    };
-  }
   populateDNA(popSize) {
     let permitFaRatio = qId("input-faRatio").value;
     let geneSize = calcDnaLength(parcel.area, +permitFaRatio);

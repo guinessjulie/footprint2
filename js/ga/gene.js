@@ -29,8 +29,11 @@ export default class Gene {
     for (let j = splitPoint; j < dnaB.length; j++) {
       newDNA.push(dnaB[j]);
     }
+    //this.printCrossoverDebugA(dnaA, dnaB, splitPoint);
+    // this.printCrossoverDebugB(dnaB, splitPoint);
     return newDNA;
   }
+
   static createNewCrossoverGene(geneA, geneB) {
     let newGene = new Gene(this.gridSize, geneA.dna.length);
     let newDNA = [];
@@ -40,6 +43,7 @@ export default class Gene {
     for (let i = 0; i < splitPoint; i++) {
       newDNA.push(geneA.dna[i]);
     }
+
     for (let j = splitPoint; j < geneB.dna.length; j++) {
       newDNA.push(geneB.dna[j]);
     }
