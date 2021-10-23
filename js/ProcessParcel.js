@@ -13,8 +13,7 @@ import { permitFaRatio } from "./global.js";
 import Gene from "./ga/gene.js";
 import Footprints from "./footprints.js";
 import { frameId } from "./footprints.js";
-import { PAUSE_CANVAS } from "./globalState.js";
-import { qry } from "./alias.js";
+import { qId, qry } from "./alias.js";
 //from menu execution, a instance of parcel is globaly used.
 
 export let parcel;
@@ -25,7 +24,7 @@ const createDefaultParcel = () => {
   let domRect = canvas.getBoundingClientRect();
   let rect = new Rect(new Vec2(0, 0), new Vec2(domRect.width, domRect.height));
   let vertices = rect.toPolygon();
-  parcel = new Parcel(vertices);
+  parcel = new Parcel(vertices, params.cellSize);
   return parcel;
   //parcel = new Parcel(domRectToPolygon(domRect)); // 현재는 그냥 캔버스 크기로 정함
 };
@@ -34,10 +33,11 @@ export function onParcel() {
   if (paint) {
     let i = 0; //todo to select parcel
     let poly = paint.toParcel(i);
-    if (poly == undefined) {
+    const cellChanged = qId("cellsize-changed").value;
+    if (poly == undefined || cellChanged) {
       parcel = createDefaultParcel();
     } else {
-      parcel = new Parcel(poly, 30);
+      parcel = new Parcel(poly, params.cellSize);
     }
   } else {
     parcel = createDefaultParcel();
@@ -51,6 +51,7 @@ export function onGrid(canvasId = "canvas") {
   }
   //grid = new Grid(canvasId, parcel.bbox.min, parcel.bbox.max, 30)    ;
   grid = new Grid(canvasId, parcel);
+  qId("cellsize-changed").value = false;
   return grid;
 }
 

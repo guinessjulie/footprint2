@@ -62,7 +62,7 @@
         </div>
         <div class="group command">
           <div class="item" data-command="download" title="download">
-            <i class="fas fa-pause fa-2x"></i>
+            <i class="fas fa-download"></i>
           </div>
         </div>
         <div class="group tool">
@@ -308,7 +308,7 @@
               id="pCrossIn"
               max="1"
               step=".1"
-              value="1"
+              value=".5"
             />
             <output id="pCrossOut">0.5</output>
           </div>
@@ -360,10 +360,15 @@
         </div>
         <div class="info-box">
           <div class="info-head">
-            <h3>Actions</h3>
+            <label>Status</label>
+            <output id='cellsize-changed' name="cellsize-changed" 
+            value='false'></button>
           </div>
-          <button id="pauseButton">Stop</button>
-          <button id="downloadButton">Download Data</button>
+          <div class='log'>
+            <label>Average Fitness</label>
+            <div id='log-fitness'></div>
+          </div>
+          <a href="d:\\2021\log.txt">Download!</a>
         </div>
       </div>
     </main>

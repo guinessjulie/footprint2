@@ -65,7 +65,7 @@ export default class Gene {
     return this;
   }
   static mutate(dna, mutRate) {
-    console.log(`mutate(dna): dna`, dna);
+    // console.log(`mutate(dna): dna`, dna);
     let mutDNA = [];
     const possibleCodeSet = ["00", "01", "10", "11"];
     if (Math.random() < mutRate) {
@@ -89,7 +89,7 @@ export default class Gene {
       mutDNA = [...dna];
       // console.log(`not mutated`);
     }
-    console.log(`mutDNA`, mutDNA);
+    // console.log(`mutDNA`, mutDNA);
     return mutDNA;
   }
 

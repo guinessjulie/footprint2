@@ -15,8 +15,9 @@ import { grid, parcel } from "./ProcessParcel.js";
 import { qId, qry } from "./alias.js";
 import OptimalFootprint from "./optimalFootprint.js";
 import { onParcel } from "./ProcessParcel.js";
-import { getAverage, drawOnCanvas, displayCell } from "./utils.js";
+import { getAverage, downloadLog, drawOnCanvas, displayCell } from "./utils.js";
 import Grid from "./grid2.js";
+
 export let frameId;
 export default class Footprints {
   //todo move footprint class to here and separates individuals and population
@@ -72,10 +73,12 @@ export default class Footprints {
     if (this.generation >= numGen) {
       // todo generation change
       cancelAnimationFrame(frameId);
+      downloadLog();
     }
     if (this.cur < params.popSize) {
       this.drawFootprint();
       this.cur += 1;
+      qId("out-individual").value = this.cur;
     } else {
       //let best = this.getBestFootprint(); //draw best of generation
       this.showAvgFitDebugInfo();
@@ -102,17 +105,30 @@ export default class Footprints {
 
   select(matingPool, i) {
     let childNode;
-    let idxA = Math.floor(Math.random() * matingPool.length);
-    let idxB = Math.floor(Math.random() * matingPool.length);
-    let parentAIdx = matingPool[idxA];
-    let parentBIdx = matingPool[idxB];
-    if (parentAIdx === parentBIdx) {
-      //같은 부모를 가리키면 그냥 아무거나 하나 넣는다.
-      childNode = { ...this.popSet[parentAIdx] };
-    } else {
-      const childGene = this.reproduce(parentAIdx, parentBIdx);
-      childNode = this.generateChild(childGene, i);
+    let sameParent = true;
+    let idxA, idxB, parentAIdx, parentBIdx;
+    while (sameParent) {
+      idxA = Math.floor(Math.random() * matingPool.length);
+      idxB = Math.floor(Math.random() * matingPool.length);
+      parentAIdx = matingPool[idxA];
+      parentBIdx = matingPool[idxB];
+
+      if (parentAIdx !== parentBIdx) {
+        sameParent = false;
+      } else {
+        sameParent = true;
+      }
+      // console.log(`sameParent`, sameParent);
     }
+    const childGene = this.reproduce(parentAIdx, parentBIdx);
+    childNode = this.generateChild(childGene, i);
+    // if (parentAIdx === parentBIdx) {
+    //   //같은 부모를 가리키면 그냥 아무거나 하나 넣는다.
+    //   childNode = { ...this.popSet[parentAIdx] };
+    // } else {
+    //   const childGene = this.reproduce(parentAIdx, parentBIdx);
+    //   childNode = this.generateChild(childGene, i);
+    // }
     return childNode;
   }
   reproduce(parentAIdx, parentBIdx) {
@@ -121,7 +137,7 @@ export default class Footprints {
     let dnaA = [...geneA.dna];
     let dnaB = [...geneB.dna];
     let newDNA = Gene.crossoverDNA(dnaA, dnaB);
-    this.printReproduceDebug(dnaA, dnaB, newDNA);
+    this.printReproduceDebug(parentAIdx, parentBIdx, dnaA, dnaB, newDNA);
 
     const mutRate = qId("pMutateIn").value;
     const mutDNA = Gene.mutate(newDNA, mutRate);
@@ -129,9 +145,10 @@ export default class Footprints {
     childGene.dna = [...mutDNA];
     return childGene;
   }
-  printReproduceDebug(dnaA, dnaB, newDNA) {
-    console.log(`dnaA, dnaB`, dnaA, dnaB);
-    console.log(`newDNA`, newDNA);
+  printReproduceDebug(idxA, idxB, dnaA, dnaB, newDNA) {
+    console.log(`[${idxA}]:`, dnaA);
+    console.log(`[${idxB}]:`, dnaB);
+    console.log(`newDNA:`, newDNA);
   }
   generateChild(childGene, id) {
     let foot = new Footprint(childGene, id);
@@ -152,6 +169,11 @@ export default class Footprints {
     });
     const avgFit = getAverage(fitLenAreaRatio);
     console.log(`=>average fitness`, avgFit);
+    qId("out-len-area-ratio").value = avgFit;
+    let oldLog = qId("log-fitness").innerHtml + "<br>";
+    let elm = document.createElement("div");
+    elm.innerHTML = avgFit.toString() + "<br>";
+    qId("log-fitness").appendChild(elm);
   }
 
   populateDNA(popSize) {

@@ -3,8 +3,8 @@ import Cell from "./cell2.js";
 import { geneToColor, to2DArray, getContext2d } from "./utils.js";
 import Vec2 from "./Vec2.js";
 import matrix from "./libs/matrix-js/lib/index.js";
-import { calcDnaLength, floorAreaRatio } from "./gaParams.js";
-import { CELL_SIZE, permitFaRatio } from "./global.js";
+import { calcDnaLength, floorAreaRatio, params } from "./gaParams.js";
+import { permitFaRatio } from "./global.js";
 import { matrixValCount } from "./ga/fitness.js";
 import Gene from "./ga/gene.js";
 import { parcel } from "./ProcessParcel.js";
@@ -36,6 +36,7 @@ export default class Grid {
     this.nitro = "";
   }
   setColsRows() {
+    const CELL_SIZE = parseInt(params.cellSize);
     this.cols = Math.floor(
       (this.parcel.bbox.max.x - this.parcel.bbox.min.x) / CELL_SIZE
     );
@@ -45,7 +46,7 @@ export default class Grid {
   }
   displayCell(col, row, color = "black") {
     this.ctx.save();
-    let size = CELL_SIZE;
+    let size = params.cellSize;
     this.ctx.lineWidth = 1;
     this.ctx.fillStyle = color;
     let loc = { col, row, size };
@@ -77,6 +78,7 @@ export default class Grid {
   //        }
   //    }
   drawGridOnCanvas(lineWidth = 1, fillStyle = "#cef", strokeStyle = "#333") {
+    const CELL_SIZE = parseInt(params.cellSize);
     for (let col in [...new Array(this.cols).keys()]) {
       for (let row in [...new Array(this.rows).keys()]) {
         this.ctx.save();
@@ -125,6 +127,7 @@ export default class Grid {
     return { x, y, w };
   }
   translate(loc) {
+    const CELL_SIZE = parseInt(params.cellSize);
     return {
       x: this.parcel.bbox.min.x + loc.col * CELL_SIZE,
       y: this.parcel.bbox.min.y + loc.row * CELL_SIZE,
@@ -133,6 +136,7 @@ export default class Grid {
   }
 
   translate_org2(loc) {
+    const CELL_SIZE = parseInt(params.cellSize);
     return {
       x: this.parcel.bbox.min.x + loc.col * CELL_SIZE,
       y: this.parcel.bbox.min.y + loc.row * CELL_SIZE,
@@ -341,6 +345,7 @@ export default class Grid {
   }
 
   getCellCorners(loc) {
+    const CELL_SIZE = parseInt(params.cellSize);
     let pt1 = new Vec2(this.translate(loc).x, this.translate(loc).y);
     let pt2 = new Vec2(
       this.translate(loc).x,
@@ -399,8 +404,7 @@ export default class Grid {
   //    }
 
   validFootprint(vertices) {
-    console.log("this.foot", this.matFoot);
-    console.log("this.validGrid", this.matCellInside);
+    const CELL_SIZE = parseInt(params.cellSize);
     let validCount = matrixValCount(
       matrix(this.matFoot).and(matrix(this.matCellInside)),
       1

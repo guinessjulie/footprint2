@@ -1,7 +1,7 @@
 import Vec2 from "./Vec2.js";
 import Polygon from "./Polygon.js";
 import { qId } from "./alias.js";
-import { CELL_SIZE } from "./global.js";
+import { params } from "./gaParams.js";
 export function getCanvasCoords(e, canvas) {
   let rect = canvas.getBoundingClientRect();
   let x = e.x - rect.left;
@@ -278,6 +278,7 @@ export function displayCell(canvasId, col, row, min, color = "darkgrey") {
 }
 
 export function translate(col, row, min) {
+  const CELL_SIZE = params.cellSize;
   return {
     x: min.x + col * CELL_SIZE,
     y: min.y + row * CELL_SIZE,
@@ -287,4 +288,16 @@ export function translate(col, row, min) {
 
 export function cleanupGrid(canvasId) {
   let ctx = getContext2d(canvasId);
+}
+
+export function downloadLog() {
+  const logFitness = qId("log-fitness").innerText;
+  // let parentNode = qId("log-fitness").parentNode;
+  let newNode = document.createElement("a");
+  newNode.href =
+    "data:application/octet-stream," + encodeURIComponent(logFitness);
+  // parentNode.insertBefore(newNode, "log-fitness");
+  let filename = "logFit_" + new Date().toJSON().slice(0, 10) + ".txt";
+  newNode.download = filename;
+  newNode.click();
 }

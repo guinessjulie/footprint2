@@ -1,11 +1,10 @@
-import { floorAreaRatio } from "./gaParams.js";
+import { floorAreaRatio, params } from "./gaParams.js";
 import Cell from "./cell2.js";
 import { matrixValCount, lenAreaRatio } from "./ga/fitness.js";
 import { geneToColor, matrixPerimeter, to2DArray } from "./utils.js";
 import matrix from "./libs/matrix-js/lib/index.js";
 import { grid, parcel } from "./ProcessParcel.js";
-import { qry } from "./alias.js";
-import { CELL_SIZE } from "./global.js";
+import { qId, qry } from "./alias.js";
 
 export default class Footprint {
   constructor(gene, id) {
@@ -31,7 +30,7 @@ export default class Footprint {
       this.attr.faRatio,
       this.attr.boundaryLength,
       this.attr.lenAreaRatio,
-      this.gene.dna
+      this.gene.dna.join(",")
     );
     let outIndividual = document.querySelector("#out-individual");
     let outFaRatio = document.querySelector("#out-faRatio");
@@ -96,6 +95,7 @@ export default class Footprint {
     grid.displayCells(validFootprintMatrix, 1, "black"); //doing
   }
   calcLandAttributes() {
+    const CELL_SIZE = params.cellSize;
     let validCellCount = matrixValCount(
       matrix(this.matFootprint).and(matrix(grid.matCellInside)),
       1

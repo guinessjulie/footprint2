@@ -1,3 +1,4 @@
+import { params } from "../gaParams.js";
 export function calcParcelArea(vertices) {
   let i = -1;
   let n = vertices.length;
@@ -14,6 +15,7 @@ export function calcParcelArea(vertices) {
 }
 
 function faRatio(vertices, validCellCount) {
+  const CELL_SIZE = params.cellSize;
   return (
     (validCellCount * (CELL_SIZE - 3) * (CELL_SIZE - 3)) /
     calcParcelArea(vertices)

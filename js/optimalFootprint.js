@@ -1,7 +1,7 @@
 import { parcel } from "./ProcessParcel.js";
 import { drawOnCanvas, displayCell } from "./utils.js";
-import { CELL_SIZE } from "./global.js";
 import Grid from "./grid2.js";
+
 export default class OptimalFootprint {
   constructor(footMat) {
     this.canvas = document.getElementById("canvas-generation");

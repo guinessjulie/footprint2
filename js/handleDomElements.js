@@ -31,7 +31,7 @@ export function addGAParamEventHandle() {
     updateCheckboxForceDnaSize
   );
   qId("numGeneration").addEventListener("change", updateNumGen);
-  qId("pauseButton").addEventListener("click", updatePauseButton);
+  qId("input-cell-size").addEventListener("change", updateCellSize);
 }
 
 export function updatePopulationSize(event) {
@@ -50,7 +50,10 @@ export function updatepMutateOut(event) {
 export function updateCheckboxForceDnaSize(event) {
   gaParams.params.dnaLength = event.target.value;
 }
-
+export function updateCellSize(event) {
+  gaParams.params.cellSize = event.target.value;
+  qId("cellsize-changed").value = true;
+}
 export function updateDnaLengthIn(event) {
   // qId("lengthDnaOut").value = event.target.value;
   if (qId("checkbox-dna-size").checked) {
@@ -61,13 +64,4 @@ export function updateDnaLengthIn(event) {
 
 export function updateNumGen(event) {
   qId("numGeneration").value = event.target.value;
-}
-
-export function updatePauseButton() {
-  const pause = qId("pauseButton").innerText === "Continue";
-  if (pause) {
-    qId("pauseButton").innerText = "Stop";
-  } else {
-    qId("pauseButton").innerText = "Continue";
-  }
 }

@@ -1,6 +1,6 @@
 //Rerenced https://www.trysmudford.com/blog/linear-interpolation-functions/
 
-import { CELL_SIZE } from "./global.js";
+//import { CELL_SIZE } from "./global.js";
 import { qId } from "./alias.js";
 
 export const lerp = (x, y, a) => x * (1 - a) + y * a; //x와 y의 범위가 주어졌을 때 a ratio(a배)면 얼마가 되겠느냐 하는 것
@@ -10,12 +10,13 @@ export const range = (x1, y1, x2, y2, a) => lerp(x2, y2, invlerp(x1, y1, a)); //
 
 //todo this param should accept input from the DOM element
 export const params = {
-  popSize: Number(qId("popSizeIn").value),
+  popSize: parseInt(qId("popSizeIn").value),
   faRatio: floorAreaRatio,
   dnaLength: calcDnaLength,
-  numGen: qId("numGeneration").value,
-  pCrossOut: Number(qId("pCrossOut").textContent),
+  numGen: parseInt(qId("numGeneration").value),
+  pCrossOut: parseFloat(qId("pCrossOut").textContent),
   paused: false,
+  cellSize: parseInt(qId("input-cell-size").value),
 };
 //용적률
 export function floorAreaRatio(aParcel, aFootPrint) {
